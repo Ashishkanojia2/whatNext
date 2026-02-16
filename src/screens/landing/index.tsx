@@ -1,14 +1,14 @@
 import {
   StyleSheet,
   Text,
-  Touchable,
   TouchableOpacity,
   View,
 } from 'react-native';
 import React from 'react';
-import { NavigationProp } from '@react-navigation/native';
 
-const index = ({navigation}:any) => {
+const index = ({ navigation }: any) => {
+ 
+  
   return (
     <View
       style={{
@@ -26,7 +26,7 @@ const index = ({navigation}:any) => {
           justifyContent: 'center',
           alignItems: 'center',
         }}
-        onPress={()=>navigation.navigate('BottomNav')}
+        onPress={() => navigation.navigate('LoginScreen')}
       >
         <Text style={{ fontSize: 15, color: '#fff' }}>{'What Next ->'}</Text>
       </TouchableOpacity>
