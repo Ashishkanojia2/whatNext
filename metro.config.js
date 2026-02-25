@@ -4,9 +4,6 @@ const {
  withSentryConfig
 } = require("@sentry/react-native/metro");
 
-const {
- withSentryConfig
-} = require("@sentry/react-native/metro");
 
 /**
  * Metro configuration
