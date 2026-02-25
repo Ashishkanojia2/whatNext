@@ -9,6 +9,8 @@ import SignupScreen from '../screens/auth/SignupScreen';
 import ForgotPasswordScreeen from '../screens/auth/ForgotPasswordScreen';
 import FavScreen from '../screens/bottomTab/Favorite/FavScreen';
 import * as Sentry from '@sentry/react-native';
+import HomeSectionSecScreeen from '../screens/bottomTab/home/HomeSectionSecScreeen';
+import NewCollection from '../screens/bottomTab/home/NewCollection';
 const Stack = createNativeStackNavigator();
 const routingInstrumentation = Sentry.reactNavigationIntegration({
   enableTimeToInitialDisplay: true,
@@ -23,7 +25,7 @@ const index = () => {
       }}
     >
       <Stack.Navigator
-        initialRouteName="BottomNav"
+        initialRouteName="LoginScreen"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="LandingPage" component={LandingPage} />
@@ -35,6 +37,8 @@ const index = () => {
         />
         <Stack.Screen name="FavScreen" component={FavScreen} />
         <Stack.Screen name="BottomNav" component={BottomNavigation} />
+        <Stack.Screen name="HomeSectionSecScreeen" component={HomeSectionSecScreeen} />
+        <Stack.Screen name="NewCollection" component={NewCollection} />
       </Stack.Navigator>
     </NavigationContainer>
   );

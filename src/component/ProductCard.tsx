@@ -12,6 +12,7 @@ import { fp, hp, wp } from '../helper/Responsive';
 import Images from '../assets/Images';
 import fonts from '../assets/fonts';
 import { ProductProps } from '../screens/bottomTab/home/HomeScreen';
+import LinearGradient from 'react-native-linear-gradient';
 const { width, height } = Dimensions.get('window');
 
 const ProductCard: React.FC<ProductProps> = ({
@@ -22,18 +23,28 @@ const ProductCard: React.FC<ProductProps> = ({
   rating,
   title,
   index,
+  productLike =false,
+  onPress
 }) => {
   return (
     <TouchableOpacity
       style={styles.RootContainer}
       key={index}
-      onPress={() => {}}
+      onPress={onPress}
     >
-      <Image
-        source={{ uri: image }}
-        style={{ width: '100%', height: '70%', borderRadius: 10 }}
-        resizeMode="stretch"
-      />
+      <LinearGradient
+        colors={['#e5e4e7ff', '#dfddddff']}
+        style={{ borderRadius: 10, height: '70%', alignItems: 'center', overflow:"visible" }}
+      >
+        <Image
+          source={{ uri: image }}
+          style={{ width: '95%', height: '95%' }}
+          resizeMode="stretch"
+        />
+      <TouchableOpacity activeOpacity={0.7} style={styles.likeProduct}>
+        <Image source={!productLike ? Images.inactiveFav : Images.activeFav} style={{ height: 20, width: 20 }} />
+      </TouchableOpacity>
+      </LinearGradient>
       <View style={{ flexDirection: 'row' }}>
         {Array.from({ length: 5 }).map(() => (
           <Image
@@ -69,6 +80,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginVertical: 8,
     height: height / 2.8,
+    width:width/2
   },
   lable: {
     ...commonStyle.txt,
@@ -82,5 +94,19 @@ const styles = StyleSheet.create({
   },
   amt: {
     ...commonStyle.txt,
+  },
+  likeProduct: {
+    borderRadius: 100,
+    backgroundColor: Colors.white,
+    shadowOpacity: 0.1,
+    width: '20%',
+    height: '16%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf:"flex-end",
+    position:"absolute",
+    bottom:-20,
+    zIndex:10
+    
   },
 });

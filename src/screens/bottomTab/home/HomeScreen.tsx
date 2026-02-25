@@ -30,16 +30,20 @@ export interface ProductProps {
   rating: { rate: number; count: number };
   title: string;
   index: number;
+  productLike?: boolean;
+  onPress?: () => void;
 }
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }: any) => {
   const [product, setProduct] = useState<ProductProps[]>([]);
+  const [likedProduct, setLikedProduct] = useState<ProductProps[]>([]);
 
   useFocusEffect(
     useCallback(() => {
       handleProductApi();
     }, []),
   );
+
   const renderItem = ({
     item,
     index,
@@ -57,6 +61,7 @@ const HomeScreen = () => {
         description={item?.description}
         id={item?.id}
         index={index}
+        onPress={() => {}}
       />
     );
   };
@@ -68,8 +73,8 @@ const HomeScreen = () => {
     });
     if (response) {
       setProduct(response);
+      console.log('response', response);
     }
-    console.log('response -->', response);
   };
 
   return (
@@ -91,6 +96,7 @@ const HomeScreen = () => {
         <Text style={styles.header1}>{`Fashion \nSale`}</Text>
         <CustomeButton
           lable={'check'}
+          onPress={() => navigation.navigate('HomeSectionSecScreeen')}
           buttonStyle={{ width: width / 2.5, height: hp(40), marginLeft: 10 }}
         />
       </ImageBackground>
@@ -100,15 +106,15 @@ const HomeScreen = () => {
           alignItems: 'center',
           justifyContent: 'space-between',
           paddingHorizontal: 10,
-          marginVertical:20
+          marginVertical: 20,
         }}
       >
-        <View style={{gap:2}}>
+        <View style={{ gap: 2 }}>
           <Text style={styles.header2}>New</Text>
           <Text style={styles.lable}>You've never seen it before!</Text>
         </View>
         <TouchableOpacity activeOpacity={0.7}>
-        <Text style={styles.viewProduct}>View all</Text>
+          <Text style={styles.viewProduct}>View all</Text>
         </TouchableOpacity>
       </View>
       <FlatList

@@ -1,25 +1,28 @@
-const Images ={ 
-    backIcon : require("../Images/backIcon.png"),
-    faceBook : require("../Images/faceBookIcon.png"),
-    googleIcon : require("../Images/googleIcon.png"),
-    greenCheck : require("../Images/greenCheck.png"),
-    redCrossIcon : require("../Images/redCrossIcon.png"),
-    redRightArrowIcon : require("../Images/redRightArrowIcon.png"),
-    activeHome:require('../Images/activeHome.png'),
-    activeShop:require('../Images/activeShop.png'),
-    activeProfile:require('../Images/activeProfile.png'),
-    activeBag:require('../Images/activeBag.png'),
-    activeFav:require('../Images/activeFav.png'),
-    inactiveHome:require('../Images/inactiveHome.png'),
-    inactiveBag:require('../Images/inactiveBag.png'),
-    inactiveShop:require('../Images/inactiveShop.png'),
-    inactiveProfile:require('../Images/inactiveProfile.png'),
-    inactiveFav:require('../Images/inactiveFav.png'),
-    productGirl:require('../Images/productGirl.png'),
-    productBoy:require('../Images/productBoy.png'),
-    ratingStar:require('../Images/star.png'),
-    homeBanner:require('../Images/homeBanner.png'),
-
-   
-}
-export default Images
+const Images = {
+  backIcon: require('../Images/backIcon.png'),
+  faceBook: require('../Images/faceBookIcon.png'),
+  googleIcon: require('../Images/googleIcon.png'),
+  greenCheck: require('../Images/greenCheck.png'),
+  redCrossIcon: require('../Images/redCrossIcon.png'),
+  redRightArrowIcon: require('../Images/redRightArrowIcon.png'),
+  activeHome: require('../Images/activeHome.png'),
+  activeShop: require('../Images/activeShop.png'),
+  activeProfile: require('../Images/activeProfile.png'),
+  activeBag: require('../Images/activeBag.png'),
+  activeFav: require('../Images/activeFav.png'),
+  inactiveHome: require('../Images/inactiveHome.png'),
+  inactiveBag: require('../Images/inactiveBag.png'),
+  inactiveShop: require('../Images/inactiveShop.png'),
+  inactiveProfile: require('../Images/inactiveProfile.png'),
+  inactiveFav: require('../Images/inactiveFav.png'),
+  productGirl: require('../Images/productGirl.png'),
+  productBoy: require('../Images/productBoy.png'),
+  ratingStar: require('../Images/star.png'),
+  homeBanner: require('../Images/homeBanner.png'),
+  bannerSec: require('../Images/banner2.png'),
+  banner3: require('../Images/banner3.png'),
+  banner4: require('../Images/banner4.png'),
+  banner5: require('../Images/banner6.png'),
+  
+};
+export default Images;
