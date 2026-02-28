@@ -23,6 +23,7 @@ const Images = {
   banner3: require('../Images/banner3.png'),
   banner4: require('../Images/banner4.png'),
   banner5: require('../Images/banner6.png'),
+  search: require('./search.png'),
   
 };
 export default Images;
