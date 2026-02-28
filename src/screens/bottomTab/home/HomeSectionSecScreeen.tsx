@@ -18,9 +18,10 @@ import { ProductProps } from './HomeScreen';
 import ProductCard from '../../../component/ProductCard';
 import RestApi from '../../../Api/RestApi';
 import { useFocusEffect } from '@react-navigation/native';
+import Header from '../../../component/Header';
 
 const { width, height } = Dimensions.get('window');
-const HomeSectionSecScreeen = ({navigation}:any) => {
+const HomeSectionSecScreeen = ({ navigation }: any) => {
   const [product, setProduct] = useState<ProductProps[]>([]);
   useFocusEffect(
     useCallback(() => {
@@ -56,42 +57,48 @@ const HomeSectionSecScreeen = ({navigation}:any) => {
         id={item?.id}
         index={index}
         onPress={() => {}}
+        tag="NewProduct"
       />
     );
   };
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <ImageBackground
-        source={Images.bannerSec}
-        style={{
-          width: '100%',
-          height: height / 5,
-          justifyContent: 'flex-end',
-        }}
-        resizeMode="cover"
-      >
-        <Text style={styles.headerTxt}>Street clothes</Text>
-      </ImageBackground>
-      {Array.from({length:2}).map(()=>{
-        return(
+    <>
+      <Header showLeftIcon />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <ImageBackground
+          source={Images.bannerSec}
+          style={{
+            width: '100%',
+            height: height / 5,
+            justifyContent: 'flex-end',
+          }}
+          resizeMode="cover"
+        >
+          <Text style={styles.headerTxt}>Street clothes</Text>
+        </ImageBackground>
+        {Array.from({ length: 2 }).map(() => {
+          return (
             <>
-            <View
-              style={{
+              <View
+                style={{
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   paddingHorizontal: 10,
                   marginVertical: 20,
                 }}
+              >
+                <View style={{ gap: 2 }}>
+                  <Text style={styles.header2}>Sale</Text>
+                  <Text style={styles.lable}>Super summer sale</Text>
+                </View>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => navigation.navigate('NewCollection')}
                 >
-              <View style={{ gap: 2 }}>
-                <Text style={styles.header2}>Sale</Text>
-                <Text style={styles.lable}>Super summer sale</Text>
+                  <Text style={styles.viewProduct}>View all</Text>
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity activeOpacity={0.7} onPress={()=>navigation.navigate("NewCollection")}>
-                <Text style={styles.viewProduct}>View all</Text>
-              </TouchableOpacity>
-            </View>
               <FlatList
                 data={product}
                 renderItem={renderItem}
@@ -99,11 +106,12 @@ const HomeSectionSecScreeen = ({navigation}:any) => {
                 showsVerticalScrollIndicator={false}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                />
-                </>
-        )
-      })}
-    </ScrollView>
+              />
+            </>
+          );
+        })}
+      </ScrollView>
+    </>
   );
 };
 
