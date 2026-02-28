@@ -32,6 +32,7 @@ export interface ProductProps {
   index: number;
   productLike?: boolean;
   onPress?: () => void;
+  tag?: 'Discount' | 'NewProduct';
 }
 
 const HomeScreen = ({ navigation }: any) => {

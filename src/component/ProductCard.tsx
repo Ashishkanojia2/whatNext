@@ -23,28 +23,65 @@ const ProductCard: React.FC<ProductProps> = ({
   rating,
   title,
   index,
-  productLike =false,
-  onPress
+  productLike = false,
+  onPress,
+  tag,
 }) => {
   return (
     <TouchableOpacity
       style={styles.RootContainer}
       key={index}
       onPress={onPress}
+      activeOpacity={0.8}
     >
-      <LinearGradient
+      {/* <LinearGradient
         colors={['#e5e4e7ff', '#dfddddff']}
-        style={{ borderRadius: 10, height: '70%', alignItems: 'center', overflow:"visible" }}
+        style={{
+          borderRadius: 10,
+          height: '80%',
+          alignItems: 'center',
+          overflow: 'visible',
+          justifyContent: 'center',
+        }}
+      > */}
+      <View
+        style={{
+          backgroundColor: '#dfddddff',
+          borderRadius: 10,
+          height: '70%',
+          alignItems: 'center',
+          overflow: 'visible',
+          justifyContent: 'center',
+        }}
       >
+        {tag && (
+          <View
+            style={[
+              styles.discountTag,
+              {
+                backgroundColor:
+                  tag == 'Discount' ? Colors.third : Colors.black,
+              },
+            ]}
+          >
+            <Text style={styles.discountTxt}>
+              {tag == 'Discount' ? '20%' : 'New'}
+            </Text>
+          </View>
+        )}
         <Image
           source={{ uri: image }}
-          style={{ width: '95%', height: '95%' }}
+          style={{ width: '95%', height: '80%' }}
           resizeMode="stretch"
         />
-      <TouchableOpacity activeOpacity={0.7} style={styles.likeProduct}>
-        <Image source={!productLike ? Images.inactiveFav : Images.activeFav} style={{ height: 20, width: 20 }} />
-      </TouchableOpacity>
-      </LinearGradient>
+        <TouchableOpacity activeOpacity={0.7} style={styles.likeProduct}>
+          <Image
+            source={!productLike ? Images.inactiveFav : Images.activeFav}
+            style={{ height: 20, width: 20 }}
+          />
+        </TouchableOpacity>
+      </View>
+      {/* </LinearGradient> */}
       <View style={{ flexDirection: 'row' }}>
         {Array.from({ length: 5 }).map(() => (
           <Image
@@ -76,11 +113,10 @@ const commonStyle = StyleSheet.create({
 const styles = StyleSheet.create({
   RootContainer: {
     flex: 2,
-    borderRadius: 10,
     marginHorizontal: 10,
     marginVertical: 8,
-    height: height / 2.8,
-    width:width/2
+    height: height / 2.6,
+    width: width / 2,
   },
   lable: {
     ...commonStyle.txt,
@@ -100,13 +136,29 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     shadowOpacity: 0.1,
     width: '20%',
-    height: '16%',
+    height: '17%',
     alignItems: 'center',
     justifyContent: 'center',
-    alignSelf:"flex-end",
-    position:"absolute",
-    bottom:-20,
-    zIndex:10
-    
+    alignSelf: 'flex-end',
+    position: 'absolute',
+    bottom: -20,
+    zIndex: 10,
+  },
+  discountTag: {
+    backgroundColor: Colors.third,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 5,
+    paddingHorizontal: 12,
+    alignSelf: 'flex-start',
+    position: 'relative',
+    zIndex: 1,
+    margin: 5,
+  },
+  discountTxt: {
+    ...commonStyle,
+    textAlign: 'center',
+    color: Colors.white,
   },
 });
