@@ -2,7 +2,6 @@ import { Image, StyleSheet } from 'react-native';
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../../screens/bottomTab/home/HomeScreen';
-import ProductScreen from '../../screens/bottomTab/product/ProductScreen';
 import ProfileScreen from '../../screens/bottomTab/profile/ProfileScreen';
 import Images from '../../assets/Images';
 import fonts from '../../assets/fonts';
@@ -10,6 +9,7 @@ import { fp } from '../../helper/Responsive';
 import Colors from '../../helper/Colors';
 import BagScreen from '../../screens/bottomTab/cart/BagScreen';
 import FavScreen from '../../screens/bottomTab/Favorite/FavScreen';
+import ShopScreen from '../../screens/bottomTab/shop/ShopScreen';
 const Tab = createBottomTabNavigator();
 const index = () => {
   return (
@@ -31,8 +31,8 @@ const index = () => {
         }}
       />
       <Tab.Screen
-        name="ProductScreen"
-        component={ProductScreen}
+        name="ShopScreen"
+        component={ShopScreen}
         options={{
           tabBarLabel: 'Shop',
           tabBarIcon: ({ focused }) =>

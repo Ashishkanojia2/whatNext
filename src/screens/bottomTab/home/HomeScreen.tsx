@@ -63,6 +63,7 @@ const HomeScreen = ({ navigation }: any) => {
         id={item?.id}
         index={index}
         onPress={() => {}}
+        tag='Discount'
       />
     );
   };

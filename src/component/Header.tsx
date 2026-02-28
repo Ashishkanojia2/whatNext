@@ -25,7 +25,7 @@ type CutomeHeaderProps = {
   leftImageStyle?: StyleProp<Image>;
   leftIconPress?: () => void;
   headerTxt?: StyleProp<TextStyle>;
-  backIconColor?:any
+  backIconColor?: any;
 };
 
 const Header: React.FC<CutomeHeaderProps> = ({
@@ -37,13 +37,16 @@ const Header: React.FC<CutomeHeaderProps> = ({
   rightIcon,
   leftIconPress,
   headerTxt,
-  backIconColor = "#000"
+  backIconColor = '#000',
 }) => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   return (
     <View style={styles.rootContianer}>
       {showLeftIcon ? (
-        <TouchableOpacity activeOpacity={0.7} onPress={()=> leftIconPress ?? navigation.goBack()}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => leftIconPress ?? navigation.goBack()}
+        >
           <Image
             source={Images.backIcon}
             tintColor={backIconColor}
@@ -61,9 +64,24 @@ const Header: React.FC<CutomeHeaderProps> = ({
       ) : (
         <View />
       )}
-      {rightIcon ? <View /> : <View />}
+      {rightIcon ? (
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => leftIconPress ?? navigation.goBack()}
+        >
+          <Image
+            source={rightIcon}
+            tintColor={backIconColor}
+            style={{
+              height: 30,
+              width: 30,
+            }}
+          />
+        </TouchableOpacity>
+      ) : (
+        <View />
+      )}
     </View>
-
   );
 };
 
@@ -76,6 +94,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 10,
+    paddingHorizontal:5,
     // backgroundColor:
   },
   header: {
