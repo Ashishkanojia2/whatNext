@@ -1,15 +1,15 @@
 import React from 'react';
 import Navigation from './src/Navigations';
-import { SafeAreaView } from 'react-native';
-import { PaperProvider } from 'react-native-paper';
 import * as Sentry from '@sentry/react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
+import Colors from './src/helper/Colors';
 const routingInstrumentation = Sentry.reactNavigationIntegration({
   enableTimeToInitialDisplay:true
 });
 
 Sentry.init({
   dsn: 'https://392d82ce84c8c72bcec36d4aef5f21ad@o4510890914414592.ingest.us.sentry.io/4510890919657472',
-  // dsn: 'https://4c0745d2d10baabf9468a27253d74d3c@o4510890914414592.ingest.us.sentry.io/4510891563417600',
   sendDefaultPii: true,
   enableLogs: true,
 
@@ -31,11 +31,12 @@ Sentry.consoleLoggingIntegration({levels:['log','error','warn']})
 
 const App = () => {
   return (
-    <PaperProvider>
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#000' }}>
+    <SafeAreaProvider>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.primary2}} edges={['top']}>
         <Navigation />
+        <Toast/>
       </SafeAreaView>
-    </PaperProvider>
+    </SafeAreaProvider>
   );
 };
 

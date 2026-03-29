@@ -1,22 +1,52 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createNavigationContainerRef, NavigationContainer } from '@react-navigation/native';
-import LandingPage from '../screens/landing';
-import BottomNavigation from '../Navigations/BottomNavigation';
-import LoginScreen from '../screens/auth/LoginScreen';
-import SignupScreen from '../screens/auth/SignupScreen';
-import ForgotPasswordScreeen from '../screens/auth/ForgotPasswordScreen';
-import FavScreen from '../screens/bottomTab/Favorite/FavScreen';
 import * as Sentry from '@sentry/react-native';
-import HomeSectionSecScreeen from '../screens/bottomTab/home/HomeSectionSecScreeen';
-import NewCollection from '../screens/bottomTab/home/NewCollection';
+import authStack from './AuthStack/AuthStack';
+import mainStack from './MainStack/mainStack';
+import localStore from '../utils/AsynsStorage';
 const Stack = createNativeStackNavigator();
 const routingInstrumentation = Sentry.reactNavigationIntegration({
   enableTimeToInitialDisplay: true,
 });
 const index = () => {
   const navigationRef = createNavigationContainerRef();
+  const [checking, setChecking] = useState(true);
+  const [initialRoute, setInitialRoute] = useState<'MainStack' | 'AuthStack'>('AuthStack');
+
+  useEffect(() => {
+    let mounted = true;
+    const check = async () => {
+      try {
+        const token = await localStore({ method: 'get', key: 'token' });
+        if (!mounted) return;
+        if (token) {
+          setInitialRoute('MainStack');
+        } else {
+          setInitialRoute('AuthStack');
+        }
+      } catch (e) {
+        console.log('error checking token', e);
+        setInitialRoute('AuthStack');
+      } finally {
+        if (mounted) setChecking(false);
+      }
+    };
+    check();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  if (checking) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
   return (
     <NavigationContainer
       ref={navigationRef}
@@ -25,25 +55,13 @@ const index = () => {
       }}
     >
       <Stack.Navigator
-        initialRouteName="LoginScreen"
+        initialRouteName={initialRoute}
         screenOptions={{ headerShown: false }}
       >
-        <Stack.Screen name="LandingPage" component={LandingPage} />
-        <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        <Stack.Screen name="SignupScreen" component={SignupScreen} />
-        <Stack.Screen
-          name="ForgotPasswordScreen"
-          component={ForgotPasswordScreeen}
-        />
-        <Stack.Screen name="FavScreen" component={FavScreen} />
-        <Stack.Screen name="BottomNav" component={BottomNavigation} />
-        <Stack.Screen name="HomeSectionSecScreeen" component={HomeSectionSecScreeen} />
-        <Stack.Screen name="NewCollection" component={NewCollection} />
+        <Stack.Screen name="AuthStack" component={authStack} />
+        <Stack.Screen name="MainStack" component={mainStack} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
-
 export default index;
-
-const styles = StyleSheet.create({});

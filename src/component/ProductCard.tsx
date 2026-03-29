@@ -1,6 +1,7 @@
 import {
   Dimensions,
   Image,
+  ImageBackground,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -11,39 +12,23 @@ import Colors from '../helper/Colors';
 import { fp, hp, wp } from '../helper/Responsive';
 import Images from '../assets/Images';
 import fonts from '../assets/fonts';
-import { ProductProps } from '../screens/bottomTab/home/HomeScreen';
-import LinearGradient from 'react-native-linear-gradient';
+import { ProductProps } from '../helper/interface';
 const { width, height } = Dimensions.get('window');
 
-const ProductCard: React.FC<ProductProps> = ({
-  category,
-  description,
-  image,
-  price,
-  rating,
-  title,
-  index,
-  productLike = false,
-  onPress,
-  tag,
-}) => {
+interface ProductCardProps {
+  item: ProductProps;
+  index: number;
+}
+
+const ProductCard: React.FC<ProductCardProps> = ({ item, index }: { item: ProductProps, index: number }) => {
   return (
     <TouchableOpacity
+      id={item?.id}
       style={styles.RootContainer}
       key={index}
-      onPress={onPress}
+      onPress={item?.onPress}
       activeOpacity={0.8}
     >
-      {/* <LinearGradient
-        colors={['#e5e4e7ff', '#dfddddff']}
-        style={{
-          borderRadius: 10,
-          height: '80%',
-          alignItems: 'center',
-          overflow: 'visible',
-          justifyContent: 'center',
-        }}
-      > */}
       <View
         style={{
           backgroundColor: '#dfddddff',
@@ -54,34 +39,41 @@ const ProductCard: React.FC<ProductProps> = ({
           justifyContent: 'center',
         }}
       >
-        {tag && (
-          <View
-            style={[
-              styles.discountTag,
-              {
-                backgroundColor:
-                  tag == 'Discount' ? Colors.third : Colors.black,
-              },
-            ]}
-          >
-            <Text style={styles.discountTxt}>
-              {tag == 'Discount' ? '20%' : 'New'}
-            </Text>
-          </View>
-        )}
-        <Image
-          source={{ uri: image }}
-          style={{ width: '95%', height: '80%' }}
+        <ImageBackground
+          source={
+            index % 3 == 0
+              ? require('.././assets/Images/productBoy.png')
+              : require('.././assets/Images/productGirl.png')
+          }
+          style={{ width: '100%', height: '100%' }}
           resizeMode="stretch"
-        />
+        >
+          {true && (
+            <View
+              style={[
+                styles.discountTag,
+                {
+                  backgroundColor:
+                    "Discount"  == 'Discount' ? Colors.third : Colors.black,
+                },
+              ]}
+            >
+              <Text style={styles.discountTxt}>
+                {"Discount" == 'Discount' ? '20%' : 'New'}
+              </Text>
+            </View>
+          )}
+
+        </ImageBackground>
+
+
         <TouchableOpacity activeOpacity={0.7} style={styles.likeProduct}>
           <Image
-            source={!productLike ? Images.inactiveFav : Images.activeFav}
+            source={!item?.productLike ? Images.inactiveFav : Images.activeFav}
             style={{ height: 20, width: 20 }}
           />
         </TouchableOpacity>
       </View>
-      {/* </LinearGradient> */}
       <View style={{ flexDirection: 'row' }}>
         {Array.from({ length: 5 }).map(() => (
           <Image
@@ -90,13 +82,13 @@ const ProductCard: React.FC<ProductProps> = ({
             resizeMode="center"
           />
         ))}
-        <Text>{rating?.count}</Text>
+        <Text>{item?.rating?.count}</Text>
       </View>
       <Text style={styles.lable}>T-shirt</Text>
       <Text style={styles.title} numberOfLines={2}>
-        {title}
+        {item?.title}
       </Text>
-      <Text style={styles.amt}>Price ${price}</Text>
+      <Text style={styles.amt}>Price ${item?.price}</Text>
     </TouchableOpacity>
   );
 };

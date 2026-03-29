@@ -89,7 +89,7 @@ const style = StyleSheet.create({
   lable: {
     fontFamily: fonts.Light,
     fontSize: fp(12),
-    marginTop: 10,
+    // marginTop: 10,
   },
 });
 

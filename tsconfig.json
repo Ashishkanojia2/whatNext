@@ -2,6 +2,13 @@
   "extends": "@react-native/typescript-config",
   "compilerOptions": {
     "types": ["jest"],
+    // "paths": {
+    //   "@screens/*": ["./src/screens/*"],
+    //   "@auth/*": ["./src/screens/auth/*"],
+    //   "@bottomTab/*": ["./src/screens/bottomTab/*"],
+    //   "@nav/*": ["./src/Navigations/*"],
+    //   "@constants/*": ["./src/constants/*"]
+    // }
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["**/node_modules", "**/Pods"]

@@ -13,7 +13,7 @@ import {
 import React, { useState } from 'react';
 import Colors from '../helper/Colors';
 import Images from '../assets/Images';
-import { fp, hp } from '../helper/Responsive';
+import { fp, hp, wp } from '../helper/Responsive';
 import fonts from '../assets/fonts';
 
 const { width, height } = Dimensions.get('window');
@@ -53,10 +53,9 @@ const styles = StyleSheet.create({
   rootContianer: {
     backgroundColor: Colors.white,
     width: '100%',
-    height: hp(60),
+    height: hp(65),
     justifyContent: 'center',
     paddingHorizontal: 10,
-    gap: 5,
     shadowOpacity: 0.1,
     borderRadius: 5,
   },
@@ -68,5 +67,6 @@ const styles = StyleSheet.create({
     fontSize: fp(10),
     color: Colors.placeHolder,
     fontFamily: fonts.Regular,
+    marginLeft:wp(5)
   },
 });
