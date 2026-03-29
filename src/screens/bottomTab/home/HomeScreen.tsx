@@ -8,8 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
-import ProductData from '../../../helper/RawData';
+import React, { useCallback, useState } from 'react';
 import ProductCard from '../../../component/ProductCard';
 import RestApi from '../../../Api/RestApi';
 import { useFocusEffect } from '@react-navigation/native';
@@ -18,22 +17,9 @@ import { fp, hp } from '../../../helper/Responsive';
 import Colors from '../../../helper/Colors';
 import fonts from '../../../assets/fonts';
 import CustomeButton from '../../../component/CustomeButton';
+import { ProductProps } from '../../../helper/interface';
 
 const { height, width } = Dimensions.get('window');
-
-export interface ProductProps {
-  category: string;
-  description: string;
-  id: number;
-  image: string;
-  price: number;
-  rating: { rate: number; count: number };
-  title: string;
-  index: number;
-  productLike?: boolean;
-  onPress?: () => void;
-  tag?: 'Discount' | 'NewProduct';
-}
 
 const HomeScreen = ({ navigation }: any) => {
   const [product, setProduct] = useState<ProductProps[]>([]);
@@ -41,42 +27,33 @@ const HomeScreen = ({ navigation }: any) => {
 
   useFocusEffect(
     useCallback(() => {
-      handleProductApi();
+      getAllProduct();
     }, []),
   );
 
-  const renderItem = ({
-    item,
-    index,
-  }: {
+  const getAllProduct = async () => {
+    console.log('is api hit');
+
+    try {
+      const res = await RestApi({
+        method: 'GET',
+        endpoint: 'product/allProducts',
+      });
+      if (res.status === 200) {
+        setProduct(res.result);
+      }
+    } catch (error) {
+      console.log('homeSceen error: ', error);
+    }
+  };
+
+  const renderItem = ({item,index,}: {
     item: ProductProps;
     index: number;
   }) => {
     return (
-      <ProductCard
-        category=""
-        image={item?.image}
-        price={item?.price}
-        title={item?.title}
-        rating={item?.rating}
-        description={item?.description}
-        id={item?.id}
-        index={index}
-        onPress={() => {}}
-        tag='Discount'
-      />
+      <ProductCard item={item} index={index}/>
     );
-  };
-
-  const handleProductApi = async () => {
-    const response = await RestApi({
-      method: 'GET',
-      endpoint: 'products',
-    });
-    if (response) {
-      setProduct(response);
-      console.log('response', response);
-    }
   };
 
   return (

@@ -24,6 +24,17 @@ const Images = {
   banner4: require('../Images/banner4.png'),
   banner5: require('../Images/banner6.png'),
   search: require('./search.png'),
+
+  contactIcon: require('./contact.png'),
+  faqIcon: require('./faq.png'),
+  logoutIcon: require('./logout.png'),
+  orderIcon: require('./orderIcon.png'),
+  settingsIcon: require('./settings.png'),
+  deleteIcon: require('./delete.png'),
+  infoIcon: require('./info.png'),
+  feedbackIcon: require('./like.png'),
+  notificationIcon: require('./notification.png'),
+  paymentIcon: require('./payment.png'),
   
 };
 export default Images;
