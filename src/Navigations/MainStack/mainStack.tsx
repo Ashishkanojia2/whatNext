@@ -13,8 +13,9 @@ import Feedback from '../../screens/bottomTab/profile/Feedback';
 import TermAndService from '../../screens/bottomTab/profile/TermAndService';
 import FAQ from '../../screens/bottomTab/profile/FAQ';
 import ContsctUs from '../../screens/bottomTab/profile/ContsctUs';
+import MyProfileScreen from '../../screens/bottomTab/profile/MyProfileScreen';
 const Stack = createNativeStackNavigator();
-const mainStack = () => {
+const MainStack = () => {
   return (
       <Stack.Navigator
         initialRouteName="BottomNav"
@@ -34,8 +35,9 @@ const mainStack = () => {
         <Stack.Screen name="TermAndService" component={TermAndService} />
         <Stack.Screen name="FAQ" component={FAQ} />
         <Stack.Screen name="ContactUs" component={ContsctUs} />
+        <Stack.Screen name="MyProfile" component={MyProfileScreen} />
 
       </Stack.Navigator>
   );
 };
-export default mainStack;
+export default MainStack;

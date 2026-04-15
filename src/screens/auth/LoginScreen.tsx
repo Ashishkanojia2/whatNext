@@ -2,16 +2,13 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import Colors from '../../helper/Colors';
 import Header from '../../component/Header';
-import { fp, hp, wp } from '../../helper/Responsive';
+import { fp } from '../../helper/Responsive';
 import fonts from '../../assets/fonts';
 import CustomeTextInput from '../../component/CustomeTextInput';
 import Images from '../../assets/Images';
 import CustomeButton from '../../component/CustomeButton';
 import showToast from '../../utils/showToast';
 import RestApi from '../../Api/RestApi';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import localStore from '../../utils/AsynsStorage';
-import { useFocusEffect } from '@react-navigation/native';
 
 const LoginScreen = ({ navigation }: any) => {
   const [mail, setMail] = useState<string>('test001@gmail.com');
@@ -35,15 +32,12 @@ const LoginScreen = ({ navigation }: any) => {
       console.log('Login Response', response);
       if (response.success) {
         showToast({ message: response.message, type: 'success' });
-  await localStore({ method: 'set', key: 'token', value: response?.token });
-  // read back and log to confirm it was stored
-  const saved = await localStore({ method: 'get', key: 'token' });
-  console.log('token saved to AsyncStorage:', saved);
-        // After storing token, reset to the app main entry. Use 'BottomNav' which exists
-        // at the top-level navigator so the reset succeeds.
+        // await localStore({ method: 'set', key: 'token', value: response?.token });
+        // const saved = await localStore({ method: 'get', key: 'token' });
+        // console.log('token saved to AsyncStorage:', saved);
         navigation.reset({
           index: 0,
-          routes: [{ name: 'mainStack' }],
+          routes: [{ name: 'MainStack' }],
         });
       }
     } catch (error) {
@@ -89,8 +83,8 @@ const LoginScreen = ({ navigation }: any) => {
       <View style={{ alignItems: 'center', marginTop: '35%' }}>
         <Text style={styles.title2}>Or login with social account</Text>
         <View style={{ flexDirection: 'row' }}>
-          <SocailIcon image={Images.googleIcon} onPress={() => {}} />
-          <SocailIcon image={Images.faceBook} onPress={() => {}} />
+          <SocailIcon image={Images.googleIcon} onPress={() => { }} />
+          <SocailIcon image={Images.faceBook} onPress={() => { }} />
         </View>
       </View>
     </View>

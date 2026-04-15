@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../../../component/Header';
 import Images from '../../../assets/Images';
 import Colors from '../../../helper/Colors';
@@ -14,11 +14,36 @@ import { fp } from '../../../helper/Responsive';
 import MenSectionComponent from './CategoriesSection/MenSectionComponent';
 import WomenSectionComponent from './CategoriesSection/WomenSectionComponent';
 import ChildSectionComponent from './CategoriesSection/ChildSectionComponent';
+import RestApi from '../../../Api/RestApi';
 
 const section = ['Mens', 'Womens', 'Child'];
 
 const ShopScreen = () => {
   const [sectionNo, setSectionNo] = useState(0);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const categories = sectionNo == 0 ? 'men' : sectionNo == 1 ? 'women' : 'child';
+    getProductsHandler(categories)
+  }, [sectionNo])
+
+
+
+  const getProductsHandler = async (category: string) => {
+    try {
+      const res = await RestApi({
+        method: 'GET',
+        endpoint: `product/allProducts?category=${category}`,
+      });
+      console.log("categories res", res.result);
+      setProducts(res.result);
+      // return res.result;
+    } catch (error) {
+      console.log("categories catch error", error);
+    }
+  }
+
+
   return (
     <View style={styles.rootContainer}>
       <Header
@@ -66,13 +91,13 @@ const ShopScreen = () => {
           );
         })}
       </View>
-        {sectionNo == 0 ? (
-          <MenSectionComponent />
-        ) : sectionNo == 1 ? (
-          <WomenSectionComponent />
-        ) : (
-          <ChildSectionComponent />
-        )}
+      {sectionNo == 0 ? (
+        <MenSectionComponent data={products} />
+      ) : sectionNo == 1 ? (
+        <WomenSectionComponent data={products} />
+      ) : (
+        <ChildSectionComponent data={products} />
+      )}
     </View>
   );
 };
