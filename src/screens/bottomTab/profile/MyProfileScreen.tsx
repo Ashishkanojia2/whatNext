@@ -4,8 +4,12 @@ import Colors from '../../../helper/Colors';
 import fonts from '../../../assets/fonts';
 import { fp, hp, wp } from '../../../helper/Responsive';
 import Images from '../../../assets/Images';
+import { useAppSelector } from '../../../Redux/reducers/hooks';
 
 const MyProfileScreen = ({ navigation }: any) => {
+    const { userData } = useAppSelector((state) => state.user);
+    console.log("useData", userData);
+    
   const [name, setName] = useState('Alex Johnson');
   const [email, setEmail] = useState('alex.johnson@example.com');
   const [phone, setPhone] = useState('+1 234 567 890');
