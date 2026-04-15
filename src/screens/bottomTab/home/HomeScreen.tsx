@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useCallback, useState } from 'react';
+import React, { use, useCallback, useState } from 'react';
 import ProductCard from '../../../component/ProductCard';
 import RestApi from '../../../Api/RestApi';
 import { useFocusEffect } from '@react-navigation/native';
@@ -18,10 +18,14 @@ import Colors from '../../../helper/Colors';
 import fonts from '../../../assets/fonts';
 import CustomeButton from '../../../component/CustomeButton';
 import { ProductProps } from '../../../helper/interface';
+import { useDispatch } from 'react-redux';
+import { setuserData } from '../../../Redux/reducers/UserReducer';
+import { useAppDispatch } from '../../../Redux/reducers/hooks';
 
 const { height, width } = Dimensions.get('window');
 
 const HomeScreen = ({ navigation }: any) => {
+  const dispatch = useAppDispatch();
   const [product, setProduct] = useState<ProductProps[]>([]);
   const [likedProduct, setLikedProduct] = useState<ProductProps[]>([]);
 
@@ -47,14 +51,23 @@ const HomeScreen = ({ navigation }: any) => {
     }
   };
 
-  const renderItem = ({item,index,}: {
+  const renderItem = ({ item, index, }: {
     item: ProductProps;
     index: number;
   }) => {
     return (
-      <ProductCard item={item} index={index}/>
+      <ProductCard item={item} index={index} />
     );
   };
+
+  const testRedux = () => {
+    const data = {
+      name: "Ashish Kanojia",
+      email: "kanojiaashish100@gmail.com",
+      phone: "1234567890"
+    }
+    dispatch(setuserData(data))
+  }
 
   return (
     <ScrollView
@@ -92,8 +105,8 @@ const HomeScreen = ({ navigation }: any) => {
           <Text style={styles.header2}>New</Text>
           <Text style={styles.lable}>You've never seen it before!</Text>
         </View>
-        <TouchableOpacity activeOpacity={0.7}>
-          <Text style={styles.viewProduct}>View all</Text>
+        <TouchableOpacity activeOpacity={0.7} onPress={() => testRedux()}>
+          <Text style={styles.viewProduct}>View all test Redux</Text>
         </TouchableOpacity>
       </View>
       <FlatList

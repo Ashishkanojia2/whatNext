@@ -73,12 +73,7 @@ const options: OptionProps[] = [
     img: Images.logoutIcon,
     navigation: "Logout"
   },
-  {
-    id: 9,
-    title: "Delete Account",
-    img: Images.deleteIcon,
-    navigation: "DeleteAccount"
-  },
+  
 ]
 
 const ProfileScreen = ({ navigation }: any) => {
