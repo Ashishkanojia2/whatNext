@@ -46,7 +46,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, index }: { item: Produc
               : require('.././assets/Images/productGirl.png')
           }
           style={{ width: '100%', height: '100%' }}
-          resizeMode="stretch"
+          resizeMode='contain'
         >
           {true && (
             <View
@@ -86,7 +86,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, index }: { item: Produc
       </View>
       <Text style={styles.lable}>T-shirt</Text>
       <Text style={styles.title} numberOfLines={2}>
-        {item?.title}
+        {item?.productName}
       </Text>
       <Text style={styles.amt}>Price ${item?.price}</Text>
     </TouchableOpacity>
@@ -101,14 +101,12 @@ const commonStyle = StyleSheet.create({
     fontSize: fp(15),
   },
 });
-
 const styles = StyleSheet.create({
   RootContainer: {
-    flex: 2,
     marginHorizontal: 10,
     marginVertical: 8,
-    height: height / 2.6,
-    width: width / 2,
+    height: height / 2.8,
+    width:width/2.2
   },
   lable: {
     ...commonStyle.txt,
