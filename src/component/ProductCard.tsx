@@ -15,12 +15,20 @@ import fonts from '../assets/fonts';
 import { ProductProps } from '../helper/interface';
 const { width, height } = Dimensions.get('window');
 
+
 interface ProductCardProps {
   item: ProductProps;
   index: number;
+  wishListHandler?: (product: ProductProps) => void
+  wishlist?: ProductProps[];
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ item, index }: { item: ProductProps, index: number }) => {
+const ProductCard = ({
+  item,
+  index,
+  wishListHandler,
+  wishlist
+}: ProductCardProps) => {
   return (
     <TouchableOpacity
       id={item?.id}
@@ -54,7 +62,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, index }: { item: Produc
                 styles.discountTag,
                 {
                   backgroundColor:
-                    "Discount"  == 'Discount' ? Colors.third : Colors.black,
+                    "Discount" == 'Discount' ? Colors.third : Colors.black,
                 },
               ]}
             >
@@ -67,13 +75,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ item, index }: { item: Produc
         </ImageBackground>
 
 
-        <TouchableOpacity activeOpacity={0.7} style={styles.likeProduct}>
+        <TouchableOpacity activeOpacity={0.7} style={styles.likeProduct} onPress={() => wishListHandler && wishListHandler(item)}>
           <Image
-            source={!item?.productLike ? Images.inactiveFav : Images.activeFav}
+            source={wishlist?.some((p) => p._id === item._id) ? Images.activeFav : Images.inactiveFav}
             style={{ height: 20, width: 20 }}
           />
         </TouchableOpacity>
-      </View>
+      </View>1
       <View style={{ flexDirection: 'row' }}>
         {Array.from({ length: 5 }).map(() => (
           <Image
@@ -106,7 +114,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginVertical: 8,
     height: height / 2.8,
-    width:width/2.2
+    width: width / 2.2
   },
   lable: {
     ...commonStyle.txt,

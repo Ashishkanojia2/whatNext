@@ -1,41 +1,25 @@
-import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import Colors from '../../../../helper/Colors';
 import fonts from '../../../../assets/fonts';
 import { fp, hp } from '../../../../helper/Responsive';
-import { ProductProps } from '../../../../helper/interface';
-import ProductCard from '../../../../component/ProductCard';
-
- const renderItem = ({item,index}: {
-    item: ProductProps;
-    index: number;
-  }) => {
-    console.log("item", item);
-    
-    return (
-      <ProductCard item={item} index={index}/>
-    );
-  };
-
-
-const ChildSectionComponent = (data:any) => {
+import ProductComponent from '../../../../component/ProductComponent';
+const listHeader = () => {
   return (
-      <FlatList
-        data={data?.data}
-        renderItem={renderItem}
-        contentContainerStyle={{ paddingBottom: hp(100)}}
-        ListHeaderComponent={() => 
-          <View style={styles.banner}>
-            <Text style={styles.bannerTxt}>CHILDREN BRANDED CLOTH ON SALES</Text>
-            <Text style={[styles.bannerTxt, { fontSize: fp(13) }]}>
-              Up to 35% off
-            </Text>
-          </View>
-        }
-        keyExtractor={(_, index) => index.toString()}
-        numColumns={2}
-        showsVerticalScrollIndicator={false}
-      />
+    <View style={styles.banner}>
+      <Text style={styles.bannerTxt}>CHILDREN BRANDED CLOTH ON SALES</Text>
+      <Text style={[styles.bannerTxt, { fontSize: fp(13) }]}>
+        Up to 35% off
+      </Text>
+    </View>
+  )
+}
+const ChildSectionComponent = (data: any) => {
+  return (
+    <ProductComponent product={data?.data}
+      listHeaderComponent={
+        listHeader()}
+    />
   );
 };
 
@@ -50,7 +34,7 @@ const styles = StyleSheet.create({
     height: hp(100),
     gap: 5,
     marginVertical: 15,
-    marginHorizontal:10
+    marginHorizontal: 10
   },
   bannerTxt: {
     color: Colors.white,

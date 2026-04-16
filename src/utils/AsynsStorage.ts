@@ -21,6 +21,7 @@ const localStore = async (storage: Storage) => {
         return await AsyncStorage.clear();
 
       default:
+        console.log("default");
         return null;
     }
   } catch (error) {

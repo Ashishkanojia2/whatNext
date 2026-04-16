@@ -1,40 +1,26 @@
-import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import Colors from '../../../../helper/Colors';
 import fonts from '../../../../assets/fonts';
 import { fp, hp } from '../../../../helper/Responsive';
-import { ProductProps } from '../../../../helper/interface';
-import ProductCard from '../../../../component/ProductCard';
+import ProductComponent from '../../../../component/ProductComponent';
 
-
- const renderItem = ({item,index,}: {
-    item: ProductProps;
-    index: number;
-  }) => {
+const MenSectionComponent = (data: any) => {
+  const listHeader = () => {
     return (
-      <ProductCard item={item} index={index}/>
+      <View style={styles.banner}>
+        <Text style={styles.bannerTxt}>SUMMER SALES</Text>
+        <Text style={[styles.bannerTxt, { fontSize: fp(13) }]}>
+          Up to 15% off
+        </Text>
+      </View>
     );
-  };
-
-
-const MenSectionComponent = (data:any) => {
+  }
   return (
-      <FlatList
-        data={data?.data}
-        renderItem={renderItem}
-        contentContainerStyle={{ paddingBottom: hp(100)}}
-        ListHeaderComponent={() => 
-          <View style={styles.banner}>
-            <Text style={styles.bannerTxt}>SUMMER SALES</Text>
-            <Text style={[styles.bannerTxt, { fontSize: fp(13) }]}>
-              Up to 15% off
-            </Text>
-          </View>
-        }
-        keyExtractor={(_, index) => index.toString()}
-        numColumns={2}
-        showsVerticalScrollIndicator={false}
-      />
+    <ProductComponent product={data?.data}
+      listHeaderComponent={
+        listHeader()}
+    />
   );
 };
 
@@ -49,7 +35,7 @@ const styles = StyleSheet.create({
     height: hp(100),
     gap: 5,
     marginVertical: 15,
-    marginHorizontal:10
+    marginHorizontal: 10
   },
   bannerTxt: {
     color: Colors.white,

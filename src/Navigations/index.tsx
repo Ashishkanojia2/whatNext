@@ -1,31 +1,39 @@
-import {View, ActivityIndicator } from 'react-native';
-import React, { useState } from 'react';
+import { View, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createNavigationContainerRef, NavigationContainer } from '@react-navigation/native';
-import * as Sentry from '@sentry/react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import authStack from './AuthStack/AuthStack';
 import MainStack from './MainStack/MainStack';
+import localStore from '../utils/AsynsStorage';
+import Colors from '../helper/Colors';
 const Stack = createNativeStackNavigator();
-const routingInstrumentation = Sentry.reactNavigationIntegration({
-  enableTimeToInitialDisplay: true,
-});
+
 const index = () => {
-  const navigationRef = createNavigationContainerRef();
-  const [checking, setChecking] = useState(true);
-  const [initialRoute, setInitialRoute] = useState<'MainStack' | 'AuthStack'>('AuthStack');
+  const [isloggedIn, setIsloggedIn] = useState<boolean | null>(null);
 
+  useEffect(() => {
+    tokenValue()
+  }, [])
 
-  
-
+  const tokenValue = async () => {
+    const token = await localStore({ method: 'get', key: 'token' })
+    if (token) {
+      setIsloggedIn(true)
+    } else {
+      setIsloggedIn(false)
+    }
+  }
+  if (isloggedIn === null) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center' }}>
+        <ActivityIndicator color={Colors.secondary} />
+      </View>
+    );
+  }
   return (
-    <NavigationContainer
-      ref={navigationRef}
-      onReady={() => {
-        routingInstrumentation.registerNavigationContainer(navigationRef);
-      }}
-    >
+    <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={"MainStack"}
+        initialRouteName={isloggedIn ? 'MainStack' : 'AuthStack'}
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="AuthStack" component={authStack} />

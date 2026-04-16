@@ -9,6 +9,7 @@ import Images from '../../assets/Images';
 import CustomeButton from '../../component/CustomeButton';
 import showToast from '../../utils/showToast';
 import RestApi from '../../Api/RestApi';
+import localStore from '../../utils/AsynsStorage';
 
 const LoginScreen = ({ navigation }: any) => {
   const [mail, setMail] = useState<string>('test001@gmail.com');
@@ -32,7 +33,11 @@ const LoginScreen = ({ navigation }: any) => {
       console.log('Login Response', response);
       if (response.success) {
         showToast({ message: response.message, type: 'success' });
-        // await localStore({ method: 'set', key: 'token', value: response?.token });
+        await localStore({
+          method: 'set',
+          key: 'token',
+          value: response?.token
+        })
         // const saved = await localStore({ method: 'get', key: 'token' });
         // console.log('token saved to AsyncStorage:', saved);
         navigation.reset({
