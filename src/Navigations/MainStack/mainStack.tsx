@@ -14,6 +14,9 @@ import TermAndService from '../../screens/bottomTab/profile/TermAndService';
 import FAQ from '../../screens/bottomTab/profile/FAQ';
 import ContsctUs from '../../screens/bottomTab/profile/ContsctUs';
 import MyProfileScreen from '../../screens/bottomTab/profile/MyProfileScreen';
+import ProductScreen from '../../screens/main/product';
+import SearchComponent from '../../component/search/SearchComponent';
+
 const Stack = createNativeStackNavigator();
 const MainStack = () => {
   return (
@@ -36,6 +39,9 @@ const MainStack = () => {
         <Stack.Screen name="FAQ" component={FAQ} />
         <Stack.Screen name="ContactUs" component={ContsctUs} />
         <Stack.Screen name="MyProfile" component={MyProfileScreen} />
+        <Stack.Screen name="ProductScreen" component={ProductScreen} />
+        <Stack.Screen name="SearchScreen" component={SearchComponent} />
+
 
       </Stack.Navigator>
   );

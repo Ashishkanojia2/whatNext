@@ -24,6 +24,7 @@ type CutomeHeaderProps = {
   rightIcon?: ImageProps;
   leftImageStyle?: StyleProp<Image>;
   leftIconPress?: () => void;
+  rightIconPress?: () => void;
   headerTxt?: StyleProp<TextStyle>;
   backIconColor?: any;
 };
@@ -36,6 +37,7 @@ const Header: React.FC<CutomeHeaderProps> = ({
   leftIcon,
   rightIcon,
   leftIconPress,
+  rightIconPress,
   headerTxt,
   backIconColor = '#000',
 }) => {
@@ -67,7 +69,7 @@ const Header: React.FC<CutomeHeaderProps> = ({
       {rightIcon ? (
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={() => leftIconPress ?? navigation.goBack()}
+          onPress={rightIconPress}
         >
           <Image
             source={rightIcon}
