@@ -1,5 +1,4 @@
 import {
-  FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -18,7 +17,7 @@ import RestApi from '../../../Api/RestApi';
 
 const section = ['Mens', 'Womens', 'Child'];
 
-const ShopScreen = () => {
+const ShopScreen = ({ navigation }: any) => {
   const [sectionNo, setSectionNo] = useState(0);
   const [products, setProducts] = useState([]);
 
@@ -51,6 +50,8 @@ const ShopScreen = () => {
         showLeftIcon
         showRightIcon
         rightIcon={Images.search}
+        rightIconPress={() => navigation.navigate('SearchScreen')}
+
       />
       <View
         style={{

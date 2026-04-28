@@ -20,6 +20,8 @@ const MenSectionComponent = (data: any) => {
     <ProductComponent product={data?.data}
       listHeaderComponent={
         listHeader()}
+        contentContainerStyle={{paddingBottom:100}}
+
     />
   );
 };

@@ -13,6 +13,7 @@ import { fp, hp, wp } from '../helper/Responsive';
 import Images from '../assets/Images';
 import fonts from '../assets/fonts';
 import { ProductProps } from '../helper/interface';
+import { useNavigation } from '@react-navigation/native';
 const { width, height } = Dimensions.get('window');
 
 
@@ -29,12 +30,15 @@ const ProductCard = ({
   wishListHandler,
   wishlist
 }: ProductCardProps) => {
+  const navigation = useNavigation<any>()
+
   return (
     <TouchableOpacity
       id={item?.id}
       style={styles.RootContainer}
       key={index}
-      onPress={item?.onPress}
+      // onPress={item?.onPress}
+      onPress={() => navigation.navigate('ProductScreen')}
       activeOpacity={0.8}
     >
       <View
