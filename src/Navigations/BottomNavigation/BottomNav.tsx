@@ -11,7 +11,7 @@ import BagScreen from '../../screens/bottomTab/cart/BagScreen';
 import FavScreen from '../../screens/bottomTab/Favorite/FavScreen';
 import ShopScreen from '../../screens/bottomTab/shop/ShopScreen';
 const Tab = createBottomTabNavigator();
-const index = () => {
+const BottomNav = () => {
   return (
     <Tab.Navigator
       screenOptions={{ headerShown: false, tabBarStyle: { height: 90 }}}
@@ -93,7 +93,7 @@ const style = StyleSheet.create({
   },
 });
 
-export default index;
+export default BottomNav;
 const handleImage = (img: any) => {
   return <Image source={img} style={{ height: 25, width: 25 }} />;
 };

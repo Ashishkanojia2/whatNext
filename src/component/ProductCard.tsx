@@ -1,12 +1,4 @@
-import {
-  Dimensions,
-  Image,
-  ImageBackground,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Dimensions, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View, } from 'react-native';
 import React from 'react';
 import Colors from '../helper/Colors';
 import { fp, hp, wp } from '../helper/Responsive';
@@ -31,14 +23,11 @@ const ProductCard = ({
   wishlist
 }: ProductCardProps) => {
   const navigation = useNavigation<any>()
-
   return (
     <TouchableOpacity
       id={item?.id}
       style={styles.RootContainer}
-      key={index}
-      // onPress={item?.onPress}
-      onPress={() => navigation.navigate('ProductScreen')}
+      onPress={() => navigation.navigate('ProductScreen', { productId: item?._id })}
       activeOpacity={0.8}
     >
       <View
@@ -85,15 +74,19 @@ const ProductCard = ({
             style={{ height: 20, width: 20 }}
           />
         </TouchableOpacity>
-      </View>1
+      </View>
       <View style={{ flexDirection: 'row' }}>
-        {Array.from({ length: 5 }).map(() => (
+
+        {Array.from({ length: 5 }).map((_, i) => (
           <Image
+            key={i}
             source={Images.ratingStar}
             style={{ height: hp(15), width: wp(15) }}
             resizeMode="center"
           />
         ))}
+
+
         <Text>{item?.rating?.count}</Text>
       </View>
       <Text style={styles.lable}>T-shirt</Text>

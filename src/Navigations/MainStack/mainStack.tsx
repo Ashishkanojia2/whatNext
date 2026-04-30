@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import FavScreen from '../../screens/bottomTab/Favorite/FavScreen';
 import HomeSectionSecScreeen from '../../screens/bottomTab/home/HomeSectionSecScreeen';
 import NewCollection from '../../screens/bottomTab/home/NewCollection';
-import BottomNav from '../BottomNavigation';
+import BottomNav from '../BottomNavigation/BottomNav';
 import MyOrder from '../../screens/bottomTab/profile/MyOrder';
 import Payments from '../../screens/bottomTab/profile/Payments';
 import Notofication from '../../screens/bottomTab/profile/Notofication';
@@ -14,7 +14,7 @@ import TermAndService from '../../screens/bottomTab/profile/TermAndService';
 import FAQ from '../../screens/bottomTab/profile/FAQ';
 import ContsctUs from '../../screens/bottomTab/profile/ContsctUs';
 import MyProfileScreen from '../../screens/bottomTab/profile/MyProfileScreen';
-import ProductScreen from '../../screens/main/product';
+import ProductScreen from '../../screens/main/product/ProductScreen';
 import SearchComponent from '../../component/search/SearchComponent';
 
 const Stack = createNativeStackNavigator();

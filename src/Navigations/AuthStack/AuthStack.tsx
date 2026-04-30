@@ -1,15 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SignupScreen from '../../screens/auth/SignupScreen';
 import ForgotPasswordScreeen from '../../screens/auth/ForgotPasswordScreen';
 import LoginScreen from '../../screens/auth/LoginScreen';
 import MainStack from '../MainStack/MainStack';
-import localStore from '../../utils/AsynsStorage';
 const Stack = createNativeStackNavigator();
-const authStack = () => {
-
-
-
+const AuthStack = () => {
   return (
     <Stack.Navigator
       initialRouteName="LoginScreen"
@@ -26,4 +22,4 @@ const authStack = () => {
   );
 };
 
-export default authStack;
+export default AuthStack;

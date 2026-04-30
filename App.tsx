@@ -1,5 +1,5 @@
 import React from 'react';
-import Navigation from './src/Navigations';
+import RootStack from './src/Navigations/RootStack';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 import Colors from './src/helper/Colors';
@@ -11,9 +11,9 @@ const App = () => {
   return (
     <Provider store={store}>
       <SafeAreaProvider>
-        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.primary2 }} edges={['top']}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.primary2 }} edges={['top','bottom']}>
           <StatusBar barStyle="dark-content" backgroundColor={Colors.primary2} />
-          <Navigation />
+          <RootStack />
           <Toast />
         </SafeAreaView>
       </SafeAreaProvider>
