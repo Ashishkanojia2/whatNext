@@ -39,7 +39,7 @@ const ProductComponent = ({ product, listHeaderComponent, listHeaderComponentSty
         <FlatList
             data={product}
             renderItem={renderItem}
-            keyExtractor={(_, index) => index.toString()}
+            keyExtractor={(item) => item._id.toString()}
             numColumns={2}
             showsVerticalScrollIndicator={false}
             ListHeaderComponent={listHeaderComponent}

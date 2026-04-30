@@ -1,6 +1,7 @@
 import {
   Dimensions,
   ImageBackground,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -17,11 +18,15 @@ import fonts from '../../../assets/fonts';
 import CustomeButton from '../../../component/CustomeButton';
 import { ProductProps } from '../../../helper/interface';
 import ProductComponent from '../../../component/ProductComponent';
+import usePullDownToRefresh from "../../../utils/usePullDownToRefresh"
 
 const { height, width } = Dimensions.get('window');
 
 const HomeScreen = ({ navigation }: any) => {
   const [product, setProduct] = useState<ProductProps[]>([]);
+  const { refresh, refreshPageHandler } = usePullDownToRefresh()
+
+
   useFocusEffect(
     useCallback(() => {
       getAllProduct();
@@ -40,10 +45,17 @@ const HomeScreen = ({ navigation }: any) => {
       console.log('homeSceen error: ', error);
     }
   };
+
   return (
     <ScrollView
       style={styles.RootContainer}
       showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl
+          refreshing={refresh}
+          onRefresh={() => refreshPageHandler(getAllProduct)}
+        />
+      }
     >
       <ImageBackground
         source={Images.homeBanner}

@@ -2,10 +2,10 @@ import { View, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-import authStack from './AuthStack/AuthStack';
 import MainStack from './MainStack/MainStack';
 import localStore from '../utils/AsynsStorage';
 import Colors from '../helper/Colors';
+import AuthStack from './AuthStack/AuthStack';
 const Stack = createNativeStackNavigator();
 
 const index = () => {
@@ -36,7 +36,7 @@ const index = () => {
         initialRouteName={isloggedIn ? 'MainStack' : 'AuthStack'}
         screenOptions={{ headerShown: false }}
       >
-        <Stack.Screen name="AuthStack" component={authStack} />
+        <Stack.Screen name="AuthStack" component={AuthStack} />
         <Stack.Screen name="MainStack" component={MainStack} />
       </Stack.Navigator>
     </NavigationContainer>
