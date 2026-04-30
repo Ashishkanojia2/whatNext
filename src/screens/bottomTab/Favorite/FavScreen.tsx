@@ -1,41 +1,29 @@
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import React, { useState } from 'react';
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View, } from 'react-native';
+import React from 'react';
 import Colors from '../../../helper/Colors';
 import fonts from '../../../assets/fonts';
 import { fp, hp, wp } from '../../../helper/Responsive';
 import Images from '../../../assets/Images';
-
-type FavItem = {
-  id: string;
-  title: string;
-  price: number;
-  rating?: number;
-  img?: any;
-};
-
-const initialFavs: FavItem[] = [
-  { id: '1', title: 'Striped T‑shirt', price: 29.99, rating: 4.5, img: require('../../../assets/Images/productBoy.png') },
-  { id: '2', title: 'Leather Sneakers', price: 89.0, rating: 4.8, img: require('../../../assets/Images/productGirl.png') },
-  { id: '3', title: 'Denim Jacket', price: 119.5, rating: 4.6, img: require('../../../assets/Images/productBoy.png') },
-];
+import { useAppDispatch, useAppSelector } from '../../../Redux/reducers/hooks';
+import { ProductProps } from '../../../helper/interface';
+import { setWishList } from '../../../Redux/reducers/ProductReducer';
+import showToast from '../../../utils/showToast';
 
 const FavScreen = ({ navigation }: any) => {
-  const [favs, setFavs] = useState<FavItem[]>(initialFavs);
+  const dispatch = useAppDispatch()
+  const wishListData = useAppSelector((state) => state.product.wishList)
 
-  const removeFav = (id: string) => setFavs(prev => prev.filter(i => i.id !== id));
+  const removeFav = (id: any) => {
+    if (!id) return showToast({ message: "please select product want to remove", type: "error" })
+    const remaningItem = wishListData.filter(item => item._id !== id)
+    dispatch(setWishList(remaningItem))
+  }
 
-  const renderItem = ({ item }: { item: FavItem }) => (
+  const renderItem = ({ item }: { item: ProductProps }) => (
     <View style={styles.card}>
-      <Image source={item.img} style={styles.image} resizeMode="contain" />
+      <Image source={Images.productGirl} style={styles.image} resizeMode="contain" />
       <View style={styles.info}>
-        <Text style={styles.title} numberOfLines={2}>{item.title}</Text>
+        <Text style={styles.title} numberOfLines={2}>{item.productName}</Text>
         <View style={styles.rowBetween}>
           <Text style={styles.price}>${item.price.toFixed(2)}</Text>
           <View style={styles.ratingRow}>
@@ -47,7 +35,7 @@ const FavScreen = ({ navigation }: any) => {
           <TouchableOpacity style={styles.addBtn} onPress={() => navigation.navigate('HomeSectionSecScreeen')}>
             <Text style={styles.addTxt}>Add to Bag</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => removeFav(item.id)}>
+          <TouchableOpacity onPress={() => removeFav(item._id)}>
             <Text style={styles.removeTxt}>Remove</Text>
           </TouchableOpacity>
         </View>
@@ -59,7 +47,7 @@ const FavScreen = ({ navigation }: any) => {
     <View style={styles.container}>
       <Text style={styles.header}>Favorites</Text>
 
-      {favs.length === 0 ? (
+      {wishListData.length === 0 ? (
         <View style={styles.emptyState}>
           <Text style={styles.emptyTitle}>No favorites yet</Text>
           <Text style={styles.emptySub}>Tap the heart on any product to add it here.</Text>
@@ -69,8 +57,8 @@ const FavScreen = ({ navigation }: any) => {
         </View>
       ) : (
         <FlatList
-          data={favs}
-          keyExtractor={i => i.id}
+          data={wishListData}
+          keyExtractor={i => i._id}
           renderItem={renderItem}
           contentContainerStyle={{ paddingBottom: 20 }}
         />
