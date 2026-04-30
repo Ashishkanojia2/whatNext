@@ -6,6 +6,7 @@ const productSlice = createSlice({
   initialState: {
     products: [] as ProductProps[],
     wishList: [] as ProductProps[],
+    bag: [] as ProductProps[],
   },
   reducers: {
     setProducts: (state, action) => {
@@ -14,8 +15,11 @@ const productSlice = createSlice({
     setWishList: (state, action: PayloadAction<ProductProps[]>) => {
       state.wishList = action.payload;
     },
+    setBag: (state, action: PayloadAction<ProductProps[]>) => {
+      state.bag = action.payload;
+    },
   },
 });
 
-export const { setProducts, setWishList } = productSlice.actions;
+export const { setProducts, setWishList ,setBag} = productSlice.actions;
 export default productSlice.reducer;

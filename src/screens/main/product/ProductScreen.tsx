@@ -20,6 +20,8 @@ import RestApi from '../../../Api/RestApi';
 import showToast from '../../../utils/showToast';
 import { ProductProps } from '../../../helper/interface';
 import { useFocusEffect } from '@react-navigation/native';
+import { useAppDispatch } from '../../../Redux/reducers/hooks';
+import { setBag } from '../../../Redux/reducers/ProductReducer';
 
 const { width } = Dimensions.get('window');
 
@@ -38,6 +40,7 @@ const sampleProduct = {
 
 const ProductScreen = ({ navigation, route }: any) => {
     const { productId } = route?.params
+    const dispatch = useAppDispatch()
     const [qty, setQty] = useState(1);
     const [selectedSize, setSelectedSize] = useState(sampleProduct.sizes[1]);
     const [selectedColor, setSelectedColor] = useState(sampleProduct.colors[0]);
@@ -137,6 +140,17 @@ const ProductScreen = ({ navigation, route }: any) => {
         () => Math.max(0, sampleProduct.price - discount),
         [sampleProduct.price, discount],
     );
+
+
+    const addToBagHandler = (item: any) => {
+        try {
+            if (!item) return showToast({ message: "Something wents wrong this Product.", type: "info" })
+            dispatch(setBag(item))
+        } catch (error) {
+            console.log("catch Error");
+
+        }
+    }
 
 
 
@@ -288,7 +302,7 @@ const ProductScreen = ({ navigation, route }: any) => {
             <View style={styles.footer}>
                 <TouchableOpacity
                     style={styles.cartBtn}
-                    onPress={() => navigation.navigate('BagScreen')}
+                    onPress={() => addToBagHandler(product)}
                 >
                     <Text style={styles.cartTxt}>Add to Bag</Text>
                 </TouchableOpacity>

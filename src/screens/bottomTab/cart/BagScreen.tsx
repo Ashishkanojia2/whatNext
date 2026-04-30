@@ -7,10 +7,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Colors from '../../../helper/Colors';
 import fonts from '../../../assets/fonts';
 import { fp, hp, wp } from '../../../helper/Responsive';
+import { useAppSelector } from '../../../Redux/reducers/hooks';
 
 type CartItem = {
   id: string;
@@ -38,6 +39,7 @@ const initialData: CartItem[] = [
 ];
 
 const BagScreen = ({ navigation }: any) => {
+  // const bagItem = useAppSelector(state => state.product.bag)
   const [cart, setCart] = useState<CartItem[]>(initialData);
   const [coupon, setCoupon] = useState('');
 
@@ -111,7 +113,7 @@ const BagScreen = ({ navigation }: any) => {
               value={coupon}
               onChangeText={setCoupon}
             />
-            <TouchableOpacity style={styles.applyBtn} onPress={() => {}}>
+            <TouchableOpacity style={styles.applyBtn} onPress={() => { }}>
               <Text style={styles.applyTxt}>Apply</Text>
             </TouchableOpacity>
           </View>
@@ -131,12 +133,12 @@ const BagScreen = ({ navigation }: any) => {
                 <Text style={styles.summaryValue}>-${discount.toFixed(2)}</Text>
               </View>
             )}
-            <View style={[styles.summaryRow, { marginTop: 8 }]}> 
+            <View style={[styles.summaryRow, { marginTop: 8 }]}>
               <Text style={[styles.summaryLabel, { fontFamily: fonts.SemiBold }]}>Total</Text>
               <Text style={[styles.summaryValue, { fontFamily: fonts.SemiBold }]}>${total.toFixed(2)}</Text>
             </View>
 
-            <TouchableOpacity style={styles.checkoutBtn} onPress={() => navigation.navigate('Checkout') }>
+            <TouchableOpacity style={styles.checkoutBtn} onPress={() => navigation.navigate('Checkout')}>
               <Text style={styles.checkoutTxt}>Proceed to Checkout</Text>
             </TouchableOpacity>
           </View>
