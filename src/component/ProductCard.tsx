@@ -6,8 +6,8 @@ import Images from '../assets/Images';
 import fonts from '../assets/fonts';
 import { ProductProps } from '../helper/interface';
 import { useNavigation } from '@react-navigation/native';
+import CustomeButton from './CustomeButton';
 const { width, height } = Dimensions.get('window');
-
 
 interface ProductCardProps {
   item: ProductProps;
@@ -32,21 +32,13 @@ const ProductCard = ({
     >
       <View
         style={{
-          backgroundColor: '#dfddddff',
           borderRadius: 10,
-          height: '70%',
-          alignItems: 'center',
-          overflow: 'visible',
-          justifyContent: 'center',
+          height: '58%',
         }}
       >
         <ImageBackground
-          source={
-            index % 3 == 0
-              ? require('.././assets/Images/productBoy.png')
-              : require('.././assets/Images/productGirl.png')
-          }
-          style={{ width: '100%', height: '100%' }}
+          source={item?.imageUrl ? { uri: item?.imageUrl?.url } : require('.././assets/Images/productGirl.png')}
+          style={{ flex:1, borderRadius: 10 }}
           resizeMode='contain'
         >
           {true && (
@@ -67,7 +59,6 @@ const ProductCard = ({
 
         </ImageBackground>
 
-
         <TouchableOpacity activeOpacity={0.7} style={styles.likeProduct} onPress={() => wishListHandler && wishListHandler(item)}>
           <Image
             source={wishlist?.some((p) => p._id === item._id) ? Images.activeFav : Images.inactiveFav}
@@ -75,25 +66,28 @@ const ProductCard = ({
           />
         </TouchableOpacity>
       </View>
+
+
+      <Text style={styles.lable} >{item?.companyName}</Text>
+      <Text style={styles.title} numberOfLines={2}>{item?.productName} </Text>
+
       <View style={{ flexDirection: 'row' }}>
+        <Text style={{ marginHorizontal: 5 }}>{item?.rating}</Text>
 
         {Array.from({ length: 5 }).map((_, i) => (
           <Image
             key={i}
             source={Images.ratingStar}
             style={{ height: hp(15), width: wp(15) }}
+            tintColor={Colors.ratingStart}
             resizeMode="center"
           />
         ))}
 
 
-        <Text>{item?.rating?.count}</Text>
       </View>
-      <Text style={styles.lable}>T-shirt</Text>
-      <Text style={styles.title} numberOfLines={2}>
-        {item?.productName}
-      </Text>
-      <Text style={styles.amt}>Price ${item?.price}</Text>
+      <Text style={styles.amt}>₹{item?.price}</Text>
+      <CustomeButton lable={"Add to bag"} buttonStyle={styles.addtoCartBtn} lableStyle={{fontSize:fp(14)}}/>
     </TouchableOpacity>
   );
 };
@@ -110,34 +104,38 @@ const styles = StyleSheet.create({
   RootContainer: {
     marginHorizontal: 10,
     marginVertical: 8,
-    height: height / 2.8,
-    width: width / 2.2
+    height: height / 2.3,
+    width: width / 2.2,
   },
   lable: {
     ...commonStyle.txt,
     fontFamily: fonts.Regular,
-    color: Colors.placeHolder,
+    color: Colors.black,
+    fontWeight: "bold"
   },
   title: {
     ...commonStyle.txt,
-    fontFamily: fonts.SemiBold,
+    fontFamily: fonts.Regular,
     marginVertical: 5,
   },
   amt: {
     ...commonStyle.txt,
+    fontFamily: fonts.SemiBold,
+    fontSize: fp(16)
   },
   likeProduct: {
     borderRadius: 100,
     backgroundColor: Colors.white,
     shadowOpacity: 0.1,
-    width: '20%',
-    height: '17%',
+    width: wp(35),
+    height: hp(35),
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'flex-end',
     position: 'absolute',
-    bottom: -20,
+    bottom: -15,
     zIndex: 10,
+    elevation:10
   },
   discountTag: {
     backgroundColor: Colors.third,
@@ -156,4 +154,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: Colors.white,
   },
+  addtoCartBtn: {
+    height: hp(30),
+    width: "80%",
+    alignSelf: "center",
+    marginTop:5
+  }
 });
