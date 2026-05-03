@@ -16,6 +16,7 @@ import ContsctUs from '../../screens/bottomTab/profile/ContsctUs';
 import MyProfileScreen from '../../screens/bottomTab/profile/MyProfileScreen';
 import ProductScreen from '../../screens/main/product/ProductScreen';
 import SearchComponent from '../../component/search/SearchComponent';
+import ViewallProductReviewScreen from '../../screens/main/product/ViewallProductReviewScreen';
 
 const Stack = createNativeStackNavigator();
 const MainStack = () => {
@@ -41,6 +42,7 @@ const MainStack = () => {
         <Stack.Screen name="MyProfile" component={MyProfileScreen} />
         <Stack.Screen name="ProductScreen" component={ProductScreen} />
         <Stack.Screen name="SearchScreen" component={SearchComponent} />
+        <Stack.Screen name="ViewallProductReviewScreen" component={ViewallProductReviewScreen} />
 
 
       </Stack.Navigator>

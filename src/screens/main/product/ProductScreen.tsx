@@ -1,16 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    Image,
-    TouchableOpacity,
-    ScrollView,
-    Dimensions,
-    TextInput,
-    FlatList,
-    ActivityIndicator,
-} from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Dimensions, TextInput, FlatList, ActivityIndicator, } from 'react-native';
 import Colors from '../../../helper/Colors';
 import fonts from '../../../assets/fonts';
 import { fp, hp, wp } from '../../../helper/Responsive';
@@ -18,11 +7,10 @@ import Images from '../../../assets/Images';
 import ProductCard from '../../../component/ProductCard';
 import RestApi from '../../../Api/RestApi';
 import showToast from '../../../utils/showToast';
-import { ProductProps } from '../../../helper/interface';
-import { useFocusEffect } from '@react-navigation/native';
-import { useAppDispatch } from '../../../Redux/reducers/hooks';
+import { CustomerReviewProps, ProductProps } from '../../../helper/interface';
+import { useAppDispatch, useAppSelector } from '../../../Redux/reducers/hooks';
 import { setBag } from '../../../Redux/reducers/ProductReducer';
-
+import { useSelector } from 'react-redux';
 const { width } = Dimensions.get('window');
 
 const sampleProduct = {
@@ -41,9 +29,7 @@ const sampleProduct = {
 const ProductScreen = ({ navigation, route }: any) => {
     const { productId } = route?.params
     const dispatch = useAppDispatch()
-    const [qty, setQty] = useState(1);
-    const [selectedSize, setSelectedSize] = useState(sampleProduct.sizes[1]);
-    const [selectedColor, setSelectedColor] = useState(sampleProduct.colors[0]);
+    const bagItem = useAppSelector((state) => state.product.bag)
     const [coupon, setCoupon] = useState('');
     const [couponApplied, setCouponApplied] = useState(false);
     const [discount, setDiscount] = useState(0);
@@ -51,14 +37,18 @@ const ProductScreen = ({ navigation, route }: any) => {
     const [product, setProduct] = useState<ProductProps | null>(null)
     const [loading, setLoading] = useState(false)
     const [hitToLike, setHitToLike] = useState(false)
+    const [selectedSize, setSelectedSize] = useState(sampleProduct.sizes[1]);
+    const [selectedColor, setSelectedColor] = useState("");
+    const [customerReview, setCustomerReview] = useState<CustomerReviewProps[]>([])
 
-
-    useFocusEffect(useCallback(() => {
+    console.log("bagItem0-0-0-0-0-0-0-0-0-0" ,bagItem);
+    
+    useEffect(() => {
         getProductInfoHandler(productId)
-    }, [productId]))
+        getCustomerReviewHandler(productId)
+    }, [])
 
-
-    const getProductInfoHandler = (useCallback(async (productId: number | string) => {
+    const getProductInfoHandler = async (productId: number | string) => {
         setLoading(true)
         try {
             const res = await RestApi({
@@ -75,51 +65,44 @@ const ProductScreen = ({ navigation, route }: any) => {
         } finally {
             setLoading(false)
         }
-    }, []))
+    }
 
-
-
-    const reviews = [
-        {
-            id: 'r1',
-            name: 'Sophie',
-            rating: 5,
-            text: 'Amazing jacket — great fit and quality.',
-        },
-        {
-            id: 'r2',
-            name: 'Mark',
-            rating: 4,
-            text: 'Love the style. Slightly tight on sleeves.',
-        },
-    ];
+    const getCustomerReviewHandler = async (productId: number | string) => {
+        try {
+            const res = await RestApi({
+                endpoint: `product/getProductReview?productId=${productId}&page=1&limit=3`,
+                method: "GET"
+            })
+            if (!res) return console.log("No customer Review")
+            setCustomerReview(res?.result?.reviews)
+        } catch (error) {
+            console.log("catch Error to getting customer. review ", error)
+        }
+    }
 
     const similarProducts = [
         {
             id: 's1',
             productName: 'Washed Denim Jacket',
             price: 119.0,
-            rating: { count: 120 },
+            rating: 120,
             productLike: false,
         },
         {
             id: 's2',
             productName: 'Trucker Jacket',
             price: 139.0,
-            rating: { count: 88 },
+            rating: 88,
             productLike: true,
         },
         {
             id: 's3',
             productName: 'Leather Bomber',
             price: 189.0,
-            rating: { count: 34 },
+            rating: 34,
             productLike: false,
         },
     ];
-
-    const increase = () => setQty(q => q + 1);
-    const decrease = () => setQty(q => Math.max(1, q - 1));
 
     const applyCoupon = () => {
         if (coupon.trim().toUpperCase() === 'SAVE10') {
@@ -140,179 +123,191 @@ const ProductScreen = ({ navigation, route }: any) => {
         () => Math.max(0, sampleProduct.price - discount),
         [sampleProduct.price, discount],
     );
-
-
-    const addToBagHandler = (item: any) => {
+    const addToBagHandler = (item: ProductProps | null) => {
         try {
-            if (!item) return showToast({ message: "Something wents wrong this Product.", type: "info" })
-            dispatch(setBag(item))
+            if (!item) return showToast({ message: "Something went wrong with this product.", type: "info" });
+
+            const alreadyExists = bagItem?.some(
+                (bag) => bag._id === item._id
+            );
+            if (alreadyExists) return showToast({ message: "Product already added in bag", type: "info" });
+
+            dispatch(setBag([...bagItem, item]));
         } catch (error) {
-            console.log("catch Error");
-
+            console.log("catch Error", error);
         }
-    }
-
-
+    };
 
     return (
         <View style={styles.container}>
             {
-                loading ? <ActivityIndicator /> :
-
-                    <ScrollView>
-                        <TouchableOpacity activeOpacity={0.7} onPress={() => setHitToLike(!hitToLike)} style={styles.hitToLike}>
-                            <Image source={hitToLike ? Images.activeFav : Images.inactiveFav} style={{ height: 23, width: 23 }} />
-                        </TouchableOpacity>
-                        <View style={styles.imageWrap}>
-                            <Image
-                                source={sampleProduct.images[0]}
-                                style={styles.image}
-                                resizeMode="contain"
-                            />
-                        </View>
-
-                        <View style={styles.content}>
-                            <Text style={styles.title}>{product?.productName}</Text>
-
-                            <View style={styles.rowBetween}>
-                                <View style={styles.ratingRow}>
-                                    <Image source={Images.ratingStar} style={styles.star} />
-                                    <Text style={styles.ratingTxt}>{product?.rating}</Text>
-                                    <Text style={styles.reviewsTxt}>({product?.numberOfReviews})</Text>
-                                </View>
-                                <Text style={styles.price}>₹{product?.price.toFixed(2)}</Text>
+                loading ? <ActivityIndicator color={Colors.secondary} /> :
+                    <>
+                        <ScrollView>
+                            <TouchableOpacity activeOpacity={0.7} onPress={() => setHitToLike(!hitToLike)} style={styles.hitToLike}>
+                                <Image source={hitToLike ? Images.activeFav : Images.inactiveFav} style={{ height: 23, width: 23 }} />
+                            </TouchableOpacity>
+                            <View style={styles.imageWrap}>
+                                <Image
+                                    source={product?.imageUrl?.url ? { uri: product?.imageUrl?.url } : sampleProduct.images[0]}
+                                    style={styles.image}
+                                    resizeMode="contain"
+                                />
                             </View>
 
-                            <Text style={styles.sectionTitle}>Select size</Text>
-                            <View style={styles.sizeRow}>
-                                {sampleProduct.sizes.map(s => (
-                                    <TouchableOpacity
-                                        key={s}
-                                        style={[
-                                            styles.sizeItem,
-                                            selectedSize === s && styles.sizeItemActive,
-                                        ]}
-                                        onPress={() => setSelectedSize(s)}
-                                    >
-                                        <Text
+
+                            <View style={styles.content}>
+                                <Text style={styles.title}>{product?.productName}</Text>
+
+                                <View style={styles.rowBetween}>
+                                    <View style={styles.ratingRow}>
+                                        <Image source={Images.ratingStar} style={styles.star} />
+                                        <Text style={styles.ratingTxt}>{product?.rating}</Text>
+                                        <Text style={styles.reviewsTxt}>({product?.numberOfReviews})</Text>
+                                    </View>
+                                    <Text style={styles.price}>₹{product?.price.toFixed(2)}</Text>
+                                </View>
+
+                                <Text style={styles.sectionTitle}>Select size</Text>
+
+                                <View style={styles.sizeRow}>
+                                    {product?.size.map(s => (
+                                        <TouchableOpacity
+                                            key={s}
                                             style={[
-                                                styles.sizeTxt,
-                                                selectedSize === s && { color: Colors.white },
+                                                styles.sizeItem,
+                                                selectedSize === s && styles.sizeItemActive,
                                             ]}
+                                            onPress={() => setSelectedSize(s)}
                                         >
-                                            {s}
+                                            <Text
+                                                style={[
+                                                    styles.sizeTxt,
+                                                    selectedSize === s && { color: Colors.white },
+                                                ]}
+                                            >
+                                                {s}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    ))}
+                                </View>
+
+                                <Text style={styles.sectionTitle}>Select color</Text>
+                                <View style={styles.colorRow}>
+                                    {product?.color.map(c => (
+                                        <TouchableOpacity
+                                            key={c}
+                                            onPress={() => setSelectedColor(c)}
+                                            style={[
+                                                styles.colorSwatch,
+                                                { backgroundColor: c },
+                                                selectedColor === c && styles.colorActive,
+                                            ]}
+                                        />
+                                    ))}
+                                </View>
+
+                                <Text style={styles.sectionTitle}>Description</Text>
+                                <Text style={styles.description}>{product?.description}</Text>
+
+                                <View style={{ height: 12 }} />
+
+                                <View style={styles.offerCard}>
+                                    <Text style={styles.offerTitle}>Special Offer</Text>
+                                    <Text style={styles.offerTxt}>
+                                        Get extra $15 gift card on this purchase
+                                    </Text>
+                                    <TouchableOpacity
+                                        style={styles.giftBtn}
+                                        onPress={applyGift}
+                                        disabled={giftApplied}
+                                    >
+                                        <Text style={styles.giftTxt}>
+                                            {giftApplied ? 'Gift Applied' : 'Apply Gift'}
                                         </Text>
                                     </TouchableOpacity>
-                                ))}
-                            </View>
-
-                            <Text style={styles.sectionTitle}>Select color</Text>
-                            <View style={styles.colorRow}>
-                                {sampleProduct.colors.map(c => (
-                                    <TouchableOpacity
-                                        key={c}
-                                        onPress={() => setSelectedColor(c)}
-                                        style={[
-                                            styles.colorSwatch,
-                                            { backgroundColor: c },
-                                            selectedColor === c && styles.colorActive,
-                                        ]}
-                                    />
-                                ))}
-                            </View>
-
-                            <Text style={styles.sectionTitle}>Description</Text>
-                            <Text style={styles.description}>{product?.description}</Text>
-
-                            <View style={{ height: 12 }} />
-
-                            <View style={styles.offerCard}>
-                                <Text style={styles.offerTitle}>Special Offer</Text>
-                                <Text style={styles.offerTxt}>
-                                    Get extra $15 gift card on this purchase
-                                </Text>
-                                <TouchableOpacity
-                                    style={styles.giftBtn}
-                                    onPress={applyGift}
-                                    disabled={giftApplied}
-                                >
-                                    <Text style={styles.giftTxt}>
-                                        {giftApplied ? 'Gift Applied' : 'Apply Gift'}
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-
-                            <View style={styles.couponRow}>
-                                <TextInput
-                                    value={coupon}
-                                    onChangeText={setCoupon}
-                                    placeholder="Enter coupon code"
-                                    style={styles.couponInput}
-                                />
-                                <TouchableOpacity
-                                    style={styles.applyCouponBtn}
-                                    onPress={applyCoupon}
-                                >
-                                    <Text style={styles.applyCouponTxt}>Apply</Text>
-                                </TouchableOpacity>
-                            </View>
-
-                            {couponApplied && (
-                                <Text style={{ color: 'green', marginTop: 8 }}>
-                                    Coupon applied: -${discount.toFixed(2)}. Final: $
-                                    {finalPrice.toFixed(2)}
-                                </Text>
-                            )}
-
-                            <View style={{ height: 12 }} />
-
-                            <Text style={styles.sectionTitle}>Customer reviews</Text>
-                            {reviews.map(r => (
-                                <View key={r.id} style={styles.reviewCard}>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Image
-                                            source={Images.activeProfile}
-                                            style={styles.reviewAvatar}
-                                        />
-                                        <View style={{ marginLeft: 10, flex: 1 }}>
-                                            <Text style={styles.reviewName}>{r.name}</Text>
-                                            <Text style={styles.reviewText}>{r.text}</Text>
-                                        </View>
-                                        <Text style={styles.reviewRating}>{r.rating}★</Text>
-                                    </View>
                                 </View>
-                            ))}
 
-                            <View style={{ height: 12 }} />
+                                <View style={styles.couponRow}>
+                                    <TextInput
+                                        value={coupon}
+                                        onChangeText={setCoupon}
+                                        placeholder="Enter coupon code"
+                                        style={styles.couponInput}
+                                    />
+                                    <TouchableOpacity
+                                        style={styles.applyCouponBtn}
+                                        onPress={applyCoupon}
+                                    >
+                                        <Text style={styles.applyCouponTxt}>Apply</Text>
+                                    </TouchableOpacity>
+                                </View>
 
-                            <Text style={styles.sectionTitle}>Similar products</Text>
-                            <FlatList
-                                data={similarProducts}
-                                horizontal
-                                keyExtractor={i => i.id}
-                                showsHorizontalScrollIndicator={false}
-                                renderItem={({ item, index }) => (
-                                    <ProductCard item={item as any} index={index} />
+                                {couponApplied && (
+                                    <Text style={{ color: 'green', marginTop: 8 }}>
+                                        Coupon applied: -${discount.toFixed(2)}. Final: $
+                                        {finalPrice.toFixed(2)}
+                                    </Text>
                                 )}
-                            />
+
+                                {
+                                    customerReview?.length > 0 && (
+                                        <View style={{ marginTop: 12 }}>
+                                            <Text style={styles.sectionTitle}>Customer reviews</Text>
+                                            {customerReview.map(r => (
+                                                <View style={styles.reviewCard}>
+                                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                        <Image
+                                                            source={Images.activeProfile}
+                                                            style={styles.reviewAvatar}
+                                                        />
+                                                        <View style={{ marginLeft: 10, flex: 1 }}>
+                                                            <Text style={styles.reviewName}>{r.name}</Text>
+                                                            <Text style={styles.reviewText}>{r.comment}</Text>
+                                                        </View>
+                                                        <Text style={styles.reviewRating}>{Number(r.rating)}★</Text>
+                                                    </View>
+                                                </View>
+                                            ))}
+                                            <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate("ViewallProductReviewScreen", { productId: productId })}>
+                                                <Text style={styles.ViewAll}>View all</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    )
+                                }
+
+                                <View style={{ height: 12 }} />
+
+                                <Text style={styles.sectionTitle}>Similar products</Text>
+                                <FlatList
+                                    data={similarProducts}
+                                    horizontal
+                                    keyExtractor={(_, i) => i.toString()}
+                                    showsHorizontalScrollIndicator={false}
+                                    renderItem={({ item, index }) => (
+                                        <ProductCard item={item as any} index={index} />
+                                    )}
+                                />
+                            </View>
+                        </ScrollView>
+                        <View style={styles.footer}>
+                            <TouchableOpacity
+                                style={styles.cartBtn}
+                                onPress={() => addToBagHandler(product)}
+                            >
+                                <Text style={styles.cartTxt}>Add to Bag</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.buyBtn}
+                                onPress={() => navigation.navigate('Checkout')}
+                            >
+                                <Text style={styles.buyTxt}>Buy Now</Text>
+                            </TouchableOpacity>
                         </View>
-                    </ScrollView>
+                    </>
+
             }
 
-            <View style={styles.footer}>
-                <TouchableOpacity
-                    style={styles.cartBtn}
-                    onPress={() => addToBagHandler(product)}
-                >
-                    <Text style={styles.cartTxt}>Add to Bag</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.buyBtn}
-                    onPress={() => navigation.navigate('Checkout')}
-                >
-                    <Text style={styles.buyTxt}>Buy Now</Text>
-                </TouchableOpacity>
-            </View>
         </View>
     );
 };
@@ -320,7 +315,7 @@ const ProductScreen = ({ navigation, route }: any) => {
 export default ProductScreen;
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: Colors.primary2 },
+    container: { flex: 1, backgroundColor: Colors.primary2, justifyContent: "center" },
     imageWrap: {
         width: '100%',
         height: width * 0.9,
@@ -355,6 +350,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: Colors.white,
         marginRight: 10,
+        elevation: 10,
     },
     sizeItemActive: { backgroundColor: Colors.black },
     sizeTxt: { fontFamily: fonts.Medium },
@@ -366,7 +362,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#eee',
         marginRight: 10,
+        elevation: 10,
+
     },
+    ViewAll: { fontFamily: fonts.SemiBold, fontSize: fp(12), color: Colors.third, alignSelf: "flex-end", marginTop: 10 },
     colorActive: { borderColor: Colors.black, borderWidth: 2 },
     description: {
         color: Colors.placeHolder,
@@ -378,7 +377,7 @@ const styles = StyleSheet.create({
         padding: 12,
         backgroundColor: Colors.primary2,
         borderTopWidth: 1,
-        borderTopColor: '#eee',
+        borderTopColor: Colors.secondary,
     },
     cartBtn: {
         flex: 1,
@@ -387,6 +386,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginRight: 8,
         alignItems: 'center',
+        elevation: 5
     },
     cartTxt: { fontFamily: fonts.Medium },
     buyBtn: {
@@ -416,12 +416,13 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
     },
     giftTxt: { color: Colors.white, fontFamily: fonts.Medium },
-    couponRow: { flexDirection: 'row', marginTop: 12, alignItems: 'center' },
+    couponRow: { flexDirection: 'row', marginTop: 12, alignItems: 'center', },
     couponInput: {
         flex: 1,
         backgroundColor: Colors.white,
         padding: 10,
         borderRadius: 8,
+        elevation: 2
     },
     applyCouponBtn: {
         marginLeft: 8,

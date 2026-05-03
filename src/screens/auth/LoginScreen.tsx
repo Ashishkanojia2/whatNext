@@ -12,7 +12,7 @@ import RestApi from '../../Api/RestApi';
 import localStore from '../../utils/AsynsStorage';
 
 const LoginScreen = ({ navigation }: any) => {
-  const [mail, setMail] = useState<string>('test001@gmail.com');
+  const [mail, setMail] = useState<string>('ashish@gmail.com');
   const [password, setPassword] = useState<string>('Hello@123');
   const LoginHandler = async () => {
     const request = {

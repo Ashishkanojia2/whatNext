@@ -5,7 +5,8 @@ const Colors = {
     primary2:"#fafafa",
     secondary:"#db3021",
     third:"#d92f23",
-    placeHolder:"#9B9B9B"
+    placeHolder:"#9B9B9B",
+    ratingStart:"#ff6200"
 
 }
 export default Colors
