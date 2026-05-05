@@ -9,8 +9,7 @@ import RestApi from '../../../Api/RestApi';
 import showToast from '../../../utils/showToast';
 import { CustomerReviewProps, ProductProps } from '../../../helper/interface';
 import { useAppDispatch, useAppSelector } from '../../../Redux/reducers/hooks';
-import { setBag } from '../../../Redux/reducers/ProductReducer';
-import { useSelector } from 'react-redux';
+import { addToBag } from '../../../Redux/reducers/ProductReducer';
 const { width } = Dimensions.get('window');
 
 const sampleProduct = {
@@ -41,12 +40,17 @@ const ProductScreen = ({ navigation, route }: any) => {
     const [selectedColor, setSelectedColor] = useState("");
     const [customerReview, setCustomerReview] = useState<CustomerReviewProps[]>([])
 
-    console.log("bagItem0-0-0-0-0-0-0-0-0-0" ,bagItem);
-    
+
     useEffect(() => {
         getProductInfoHandler(productId)
         getCustomerReviewHandler(productId)
     }, [])
+
+    const isItemAddedAlready = bagItem?.filter(item => item._id === productId)
+
+    console.log("isItemAddedAlready", isItemAddedAlready);
+
+
 
     const getProductInfoHandler = async (productId: number | string) => {
         setLoading(true)
@@ -56,12 +60,11 @@ const ProductScreen = ({ navigation, route }: any) => {
                 endpoint: `product/getSingleProductInfo?productId=${productId}`
             })
             if (!res) return showToast({ message: res?.message })
-            console.log("response single product resposen", res?.result)
+            console.log("response single product response", res?.result)
+            console.log("response", res?.result)
             setProduct(res?.result)
-
         } catch (error) {
             console.log("catch Error", error);
-
         } finally {
             setLoading(false)
         }
@@ -124,18 +127,8 @@ const ProductScreen = ({ navigation, route }: any) => {
         [sampleProduct.price, discount],
     );
     const addToBagHandler = (item: ProductProps | null) => {
-        try {
-            if (!item) return showToast({ message: "Something went wrong with this product.", type: "info" });
-
-            const alreadyExists = bagItem?.some(
-                (bag) => bag._id === item._id
-            );
-            if (alreadyExists) return showToast({ message: "Product already added in bag", type: "info" });
-
-            dispatch(setBag([...bagItem, item]));
-        } catch (error) {
-            console.log("catch Error", error);
-        }
+        if (!item) return
+        dispatch(addToBag(item))
     };
 
     return (
@@ -295,7 +288,7 @@ const ProductScreen = ({ navigation, route }: any) => {
                                 style={styles.cartBtn}
                                 onPress={() => addToBagHandler(product)}
                             >
-                                <Text style={styles.cartTxt}>Add to Bag</Text>
+                                <Text style={styles.cartTxt}>{isItemAddedAlready.length > 0 ? "Item added" : "Add to Bag"}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={styles.buyBtn}

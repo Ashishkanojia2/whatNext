@@ -9,7 +9,7 @@ interface ProductComponentProps extends Omit<FlatListProps<ProductProps>, 'data'
     listHeaderComponent?: React.ReactElement;
     listHeaderComponentStyle?: object;
 }
-const ProductComponent = ({ product, listHeaderComponent, listHeaderComponentStyle, ...rest }: ProductComponentProps) => {
+const ProductComponent = ({ product, listHeaderComponent, listHeaderComponentStyle ,...rest }: ProductComponentProps) => {
     const dispatch = useAppDispatch();
     const { wishList } = useAppSelector((state) => state.product)
 

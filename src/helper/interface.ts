@@ -14,6 +14,7 @@ export interface ProductProps {
   createdAt: string;
   category: string;
   description: string;
+  qty: number;
   imageUrl: {
     public_id: string;
     url: string;
