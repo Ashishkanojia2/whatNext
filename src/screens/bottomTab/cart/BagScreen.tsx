@@ -1,17 +1,12 @@
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import React, { useEffect, useMemo, useState } from 'react';
+import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useMemo, useState } from 'react';
 import Colors from '../../../helper/Colors';
 import fonts from '../../../assets/fonts';
-import { fp, hp, wp } from '../../../helper/Responsive';
-import { useAppSelector } from '../../../Redux/reducers/hooks';
+import { fp } from '../../../helper/Responsive';
+import { useAppDispatch, useAppSelector } from '../../../Redux/reducers/hooks';
+import { ProductProps } from '../../../helper/interface';
+import Images from '../../../assets/Images';
+import { addToBag, decreaseQty, removeFromBag } from '../../../Redux/reducers/ProductReducer';
 
 type CartItem = {
   id: string;
@@ -21,74 +16,57 @@ type CartItem = {
   img?: any;
 };
 
-const initialData: CartItem[] = [
-  {
-    id: '1',
-    title: 'Casual T‑shirt',
-    price: 24.99,
-    qty: 1,
-    img: require('../../../assets/Images/productBoy.png'),
-  },
-  {
-    id: '2',
-    title: 'Denim Jacket',
-    price: 79.0,
-    qty: 2,
-    img: require('../../../assets/Images/productGirl.png'),
-  },
-];
-
 const BagScreen = ({ navigation }: any) => {
-  // const bagItem = useAppSelector(state => state.product.bag)
-  const [cart, setCart] = useState<CartItem[]>(initialData);
+  const bagItem = useAppSelector(state => state.product.bag)
+  const [cart, setCart] = useState<CartItem[]>([]);
   const [coupon, setCoupon] = useState('');
 
-  const updateQty = (id: string, delta: number) => {
-    setCart(prev =>
-      prev.map(i => (i.id === id ? { ...i, qty: Math.max(1, i.qty + delta) } : i)),
-    );
-  };
+  const dispatch = useAppDispatch()
 
-  const removeItem = (id: string) => {
-    setCart(prev => prev.filter(i => i.id !== id));
-  };
-
-  const subtotal = useMemo(() => cart.reduce((s, i) => s + i.price * i.qty, 0), [cart]);
+  const subtotal = useMemo(() => bagItem.reduce((s, i) => s + i.price * i.qty, 0), [bagItem]);
   const shipping = subtotal > 100 ? 0 : 8.99;
-  const discount = coupon ? 10 : 0; // simple fixed discount for demo
+  const discount = coupon ? 10 : 0;
   const total = useMemo(() => Math.max(0, subtotal + shipping - discount), [subtotal, shipping, discount]);
 
-  const renderItem = ({ item }: { item: CartItem }) => (
-    <View style={styles.itemRow}>
-      <Image source={item.img} style={styles.itemImage} resizeMode="contain" />
-      <View style={styles.itemInfo}>
-        <Text style={styles.itemTitle} numberOfLines={2}>
-          {item.title}
-        </Text>
-        <Text style={styles.itemPrice}>${(item.price * item.qty).toFixed(2)}</Text>
-        <View style={styles.rowBetween}>
-          <View style={styles.qtyContainer}>
-            <TouchableOpacity onPress={() => updateQty(item.id, -1)} style={styles.qtyBtn}>
-              <Text style={styles.qtyTxt}>−</Text>
-            </TouchableOpacity>
-            <Text style={styles.qtyValue}>{item.qty}</Text>
-            <TouchableOpacity onPress={() => updateQty(item.id, 1)} style={styles.qtyBtn}>
-              <Text style={styles.qtyTxt}>+</Text>
+  const renderItem = ({ item }: { item: ProductProps }) => {
+    return (
+      <View style={styles.itemRow}>
+        <Image source={item?.imageUrl ? { uri: item?.imageUrl?.url } : Images.productGirl} style={styles.itemImage} resizeMode="contain" />
+        <View style={styles.itemInfo}>
+          <Text style={styles.itemTitle} numberOfLines={2}>
+            {item?.productName}
+          </Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View>
+              <Text style={[styles.itemPrice, { fontSize: fp(13) }]}>Unit: ₹{Number(item?.price || 0).toFixed(2)}</Text>
+              <Text style={[styles.itemPrice, { fontSize: fp(12), color: Colors.placeHolder }]}>Total: ₹{(Number(item?.price || 0) * (item?.qty || 1)).toFixed(2)}</Text>
+            </View>
+            <Text style={[styles.itemPrice, { fontSize: fp(14), fontFamily: fonts.SemiBold }]}>Qty: {item?.qty || 1}</Text>
+          </View>
+          <View style={styles.rowBetween}>
+            <View style={styles.qtyContainer}>
+              <TouchableOpacity onPress={() => dispatch(decreaseQty(item._id ?? item.id))} style={styles.qtyBtn}>
+                <Text style={styles.qtyTxt}>−</Text>
+              </TouchableOpacity>
+              <Text style={styles.qtyValue}>{item?.qty}</Text>
+              <TouchableOpacity onPress={() => dispatch(addToBag(item))} style={styles.qtyBtn}>
+                <Text style={styles.qtyTxt}>+</Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity onPress={() => dispatch(removeFromBag(item._id ?? item.id))}>
+              <Text style={styles.removeTxt}>Remove</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={() => removeItem(item.id)}>
-            <Text style={styles.removeTxt}>Remove</Text>
-          </TouchableOpacity>
         </View>
       </View>
-    </View>
-  );
+    )
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Your Bag</Text>
 
-      {cart.length === 0 ? (
+      {bagItem.length === 0 ? (
         <View style={styles.emptyState}>
           <Text style={styles.emptyTitle}>Your bag is empty</Text>
           <Text style={styles.emptySub}>Add items and they will appear here.</Text>
@@ -99,8 +77,8 @@ const BagScreen = ({ navigation }: any) => {
       ) : (
         <>
           <FlatList
-            data={cart}
-            keyExtractor={i => i.id}
+            data={bagItem}
+            keyExtractor={(_, index) => index.toString()}
             renderItem={renderItem}
             contentContainerStyle={{ paddingBottom: 20 }}
           />
@@ -176,8 +154,7 @@ const styles = StyleSheet.create({
   itemImage: {
     width: 100,
     height: 100,
-    borderRadius: 8,
-    backgroundColor: '#f5f5f5',
+    borderRadius: 10,
   },
   itemInfo: {
     flex: 1,
@@ -234,6 +211,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     fontFamily: fonts.Regular,
+    elevation:10
+
   },
   applyBtn: {
     marginLeft: 8,
@@ -251,6 +230,8 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 10,
     marginTop: 12,
+    elevation:10
+
   },
   summaryRow: {
     flexDirection: 'row',
