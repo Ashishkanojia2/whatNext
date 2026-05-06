@@ -35,6 +35,11 @@ const Images = {
   feedbackIcon: require('./like.png'),
   notificationIcon: require('./notification.png'),
   paymentIcon: require('./payment.png'),
+
+  Gpay: require('./gpay.png'),
+  card: require('./card.png'),
+  money: require('./money.png'),
+  paypal: require('./paypal.png'),
   
 };
 export default Images;

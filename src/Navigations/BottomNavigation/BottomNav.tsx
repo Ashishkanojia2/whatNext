@@ -73,7 +73,7 @@ const BottomNav = () => {
         name="ProfileScreen"
         component={ProfileScreen}
         options={{
-          tabBarLabel: 'Profile',
+          tabBarLabel: 'My Account',
           tabBarIcon: ({ focused }) =>
             focused
               ? handleImage(Images.activeProfile)

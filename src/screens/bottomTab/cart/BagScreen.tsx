@@ -116,7 +116,7 @@ const BagScreen = ({ navigation }: any) => {
               <Text style={[styles.summaryValue, { fontFamily: fonts.SemiBold }]}>${total.toFixed(2)}</Text>
             </View>
 
-            <TouchableOpacity style={styles.checkoutBtn} onPress={() => navigation.navigate('Checkout')}>
+            <TouchableOpacity style={styles.checkoutBtn} onPress={() => navigation.navigate('CheckoutScreen')}>
               <Text style={styles.checkoutTxt}>Proceed to Checkout</Text>
             </TouchableOpacity>
           </View>

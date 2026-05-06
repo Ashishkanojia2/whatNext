@@ -1,9 +1,15 @@
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { fp, hp, wp } from '../../../helper/Responsive'
 import Images from '../../../assets/Images'
 import fonts from '../../../assets/fonts'
 import Colors from '../../../helper/Colors'
+import RestApi from '../../../Api/RestApi'
+import localStore from '../../../utils/AsynsStorage'
+import showToast from '../../../utils/showToast'
+import { UserProfileProps } from '../../../helper/interface'
+import { useAppDispatch } from '../../../Redux/reducers/hooks'
+import { setuserData } from '../../../Redux/reducers/UserReducer'
 
 interface OptionProps {
   id: number;
@@ -11,7 +17,6 @@ interface OptionProps {
   img: any;
   navigation?: string;
 }
-
 const options: OptionProps[] = [
   {
     id: 1,
@@ -47,7 +52,7 @@ const options: OptionProps[] = [
     img: Images.infoIcon,
     navigation: "AboutUs"
   },
-    {
+  {
     id: 10,
     title: "Feedback",
     img: Images.feedbackIcon,
@@ -67,48 +72,69 @@ const options: OptionProps[] = [
     title: "FAQ",
     img: Images.faqIcon,
     navigation: "FAQ"
-  },{
+  }, {
     id: 8,
     title: "Logout",
     img: Images.logoutIcon,
     navigation: "Logout"
   },
-  
 ]
 
 const ProfileScreen = ({ navigation }: any) => {
-  const user = {
-    name: 'Alex Johnson',
-    email: 'alex.johnson@example.com',
-    orders: 12,
-    wishlist: 8,
-    vouchers: 2,
-  };
+  const dispatch = useAppDispatch()
+  const [user, setUser] = useState<UserProfileProps | null>(null)
+  useEffect(() => {
+    getUserProfile()
+  }, [])
+
+  const getUserProfile = async () => {
+    try {
+      const res = await RestApi({
+        method: "GET",
+        endpoint: "user/profile",
+      })
+      console.log("response", res)
+      if (!res || res.status !== 200) return showToast({ message: "user not found" })
+      setUser(res?.result)
+      dispatch(setuserData(res?.result))
+    } catch (error) {
+      console.log("Catch Error to get user profile data", error)
+    }
+  }
+  const onPressHandler = async (value: string | undefined) => {
+    if (value == "Logout") {
+      const result = await localStore({ method: "remove", key: "token" })
+      console.log("result", result)
+      navigation.navigate("AuthStack")
+    } else {
+      navigation.navigate(value)
+    }
+  }
 
   return (
     <View style={styles.rootContainer}>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 12 }}>
         <View style={styles.headerCard}>
-          <Image source={Images.activeProfile} style={styles.avatar} />
+          <Image source={{ uri: user?.avatar?.url }} style={styles.avatar} resizeMode='contain' />
           <View style={{ marginLeft: 12, flex: 1 }}>
-            <Text style={styles.name}>{user.name}</Text>
-            <Text style={styles.email}>{user.email}</Text>
+            <Text style={styles.name}>{user?.name}</Text>
+            <Text style={styles.email}>{user?.email}</Text>
             <View style={styles.statsRow}>
               <View style={styles.statItem}>
-                <Text style={styles.statVal}>{user.orders}</Text>
+                <Text style={styles.statVal}>{0}</Text>
                 <Text style={styles.statLabel}>Orders</Text>
               </View>
               <View style={styles.statItem}>
-                <Text style={styles.statVal}>{user.wishlist}</Text>
+                <Text style={styles.statVal}>{10}</Text>
                 <Text style={styles.statLabel}>Wishlist</Text>
               </View>
               <View style={styles.statItem}>
-                <Text style={styles.statVal}>{user.vouchers}</Text>
+                <Text style={styles.statVal}>{12}</Text>
                 <Text style={styles.statLabel}>Vouchers</Text>
               </View>
             </View>
           </View>
-          <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate('MyProfile')}>
+          <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate('EditProfileScreen')}>
             <Text style={styles.editTxt}>Edit</Text>
           </TouchableOpacity>
         </View>
@@ -116,7 +142,7 @@ const ProfileScreen = ({ navigation }: any) => {
         <View style={{ height: 12 }} />
 
         {options.map((option) => (
-          <TouchableOpacity style={styles.profileItem} key={option.id} onPress={() => navigation.navigate(option.navigation)}>
+          <TouchableOpacity style={styles.profileItem} key={option.id} onPress={() => onPressHandler(option?.navigation)}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Image source={option.img} style={styles.optionImg} />
               <Text style={styles.title}>{option.title}</Text>
@@ -125,6 +151,7 @@ const ProfileScreen = ({ navigation }: any) => {
           </TouchableOpacity>
         ))}
       </ScrollView>
+
     </View>
   )
 }

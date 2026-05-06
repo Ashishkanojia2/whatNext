@@ -32,10 +32,23 @@ export interface ProductProps {
   companyName?: string;
 }
 export interface CustomerReviewProps {
-  _id: String;
-  productId: String;
-  userId: String;
-  name: String;
-  comment: String;
-  rating: Number;
+  _id?: String;
+  productId?: String;
+  userId?: String;
+  name?: String;
+  comment?: String;
+  rating?: Number;
+}
+export type UserProfileProps = {
+  address?: string,
+  avatar?: {
+    url: string
+  },
+  email?: string,
+  landMark?: string
+  name?: string,
+  phone?: string,
+  pinCode?: string,
+  query?: [string],
+  review?: [string],
 }

@@ -17,6 +17,8 @@ import MyProfileScreen from '../../screens/bottomTab/profile/MyProfileScreen';
 import ProductScreen from '../../screens/main/product/ProductScreen';
 import SearchComponent from '../../component/search/SearchComponent';
 import ViewallProductReviewScreen from '../../screens/main/product/ViewallProductReviewScreen';
+import CheckoutScreen from '../../screens/main/CheckoutScreen';
+import EditProfileScreen from '../../screens/bottomTab/profile/EditProfileScreen';
 
 const Stack = createNativeStackNavigator();
 const MainStack = () => {
@@ -43,6 +45,8 @@ const MainStack = () => {
         <Stack.Screen name="ProductScreen" component={ProductScreen} />
         <Stack.Screen name="SearchScreen" component={SearchComponent} />
         <Stack.Screen name="ViewallProductReviewScreen" component={ViewallProductReviewScreen} />
+        <Stack.Screen name="CheckoutScreen" component={CheckoutScreen} />
+        <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
 
 
       </Stack.Navigator>

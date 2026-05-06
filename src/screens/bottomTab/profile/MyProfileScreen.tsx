@@ -1,23 +1,16 @@
-import React, { useState } from 'react';
-import { Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Colors from '../../../helper/Colors';
 import fonts from '../../../assets/fonts';
 import { fp, hp, wp } from '../../../helper/Responsive';
 import Images from '../../../assets/Images';
 import { useAppSelector } from '../../../Redux/reducers/hooks';
+import ProfileField from '../../../component/ProfileField';
+import { UserProfileProps } from '../../../helper/interface';
 
 const MyProfileScreen = ({ navigation }: any) => {
     const { userData } = useAppSelector((state) => state.user);
     console.log("useData", userData);
-    
-  const [name, setName] = useState('Alex Johnson');
-  const [email, setEmail] = useState('alex.johnson@example.com');
-  const [phone, setPhone] = useState('+1 234 567 890');
-
-  const save = () => {
-    // placeholder save action
-    Alert.alert('Saved', 'Your profile has been updated');
-  };
 
   const confirmDelete = () => {
     Alert.alert('Delete account', 'Are you sure you want to delete your account? This action cannot be undone.', [
@@ -38,27 +31,19 @@ const MyProfileScreen = ({ navigation }: any) => {
       <View style={styles.topCard}>
         <Image source={Images.activeProfile} style={styles.avatar} />
         <View style={{ marginLeft: 12, flex: 1 }}>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.email}>{email}</Text>
+          <Text style={styles.name}>{userData?.name}</Text>
+          <Text style={styles.email}>{userData?.email}</Text>
+          <Text style={[styles.email, { marginTop: 6 }]}>{userData?.phone}</Text>
         </View>
-        <TouchableOpacity style={styles.editSmall} onPress={() => {}}>
-          <Text style={styles.editSmallTxt}>Change</Text>
+        <TouchableOpacity style={styles.editSmall} onPress={() => navigation.navigate('EditProfileScreen')}>
+          <Text style={styles.editSmallTxt}>Edit</Text>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.form}>
-        <Text style={styles.label}>Full name</Text>
-        <TextInput value={name} onChangeText={setName} style={styles.input} />
-
-        <Text style={styles.label}>Email</Text>
-        <TextInput value={email} onChangeText={setEmail} style={styles.input} keyboardType="email-address" />
-
-        <Text style={styles.label}>Phone</Text>
-        <TextInput value={phone} onChangeText={setPhone} style={styles.input} keyboardType="phone-pad" />
-
-        <TouchableOpacity style={styles.saveBtn} onPress={save}>
-          <Text style={styles.saveTxt}>Save Changes</Text>
-        </TouchableOpacity>
+      <View style={{ marginTop: 16 }}>
+        <ProfileField label="Address" value={userData?.address} />
+        <ProfileField label="Landmark" value={userData?.landMark} />
+        <ProfileField label="Pin Code" value={userData?.pinCode} />
       </View>
 
       <View style={styles.bottomActions}>

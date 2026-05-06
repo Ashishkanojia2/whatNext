@@ -17,6 +17,8 @@ const index = () => {
 
   const tokenValue = async () => {
     const token = await localStore({ method: 'get', key: 'token' })
+    console.log("what we recived in token", token);
+    
     if (token) {
       setIsloggedIn(true)
     } else {

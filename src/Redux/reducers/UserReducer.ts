@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { UserProfileProps } from '../../helper/interface';
 
 interface productDetails {
   id?: number;
@@ -24,7 +25,7 @@ interface UserData {
 
 interface UserStateProps {
   user: string;
-  userData: UserData;
+  userData: UserProfileProps;
 }
 
 const initialState: UserStateProps = {
