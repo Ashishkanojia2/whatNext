@@ -2,15 +2,13 @@ import React from 'react';
 import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Colors from '../../../helper/Colors';
 import fonts from '../../../assets/fonts';
-import { fp, hp, wp } from '../../../helper/Responsive';
-import Images from '../../../assets/Images';
+import { fp } from '../../../helper/Responsive';
 import { useAppSelector } from '../../../Redux/reducers/hooks';
 import ProfileField from '../../../component/ProfileField';
-import { UserProfileProps } from '../../../helper/interface';
 
 const MyProfileScreen = ({ navigation }: any) => {
+   const user = useAppSelector((state) => state.user.userData)
     const { userData } = useAppSelector((state) => state.user);
-    console.log("useData", userData);
 
   const confirmDelete = () => {
     Alert.alert('Delete account', 'Are you sure you want to delete your account? This action cannot be undone.', [
@@ -29,7 +27,7 @@ const MyProfileScreen = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
       <View style={styles.topCard}>
-        <Image source={Images.activeProfile} style={styles.avatar} />
+       <Image source={{ uri: user?.avatar?.url }} style={styles.avatar} resizeMode='contain' />
         <View style={{ marginLeft: 12, flex: 1 }}>
           <Text style={styles.name}>{userData?.name}</Text>
           <Text style={styles.email}>{userData?.email}</Text>

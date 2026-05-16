@@ -10,6 +10,7 @@ import showToast from '../../../utils/showToast';
 import { CustomerReviewProps, ProductProps } from '../../../helper/interface';
 import { useAppDispatch, useAppSelector } from '../../../Redux/reducers/hooks';
 import { addToBag } from '../../../Redux/reducers/ProductReducer';
+import CustomerHeader from '../../../component/headeComponent/CustomerHeader';
 const { width } = Dimensions.get('window');
 
 const sampleProduct = {
@@ -133,6 +134,7 @@ const ProductScreen = ({ navigation, route }: any) => {
 
     return (
         <View style={styles.container}>
+            <CustomerHeader backHandler={true} />
             {
                 loading ? <ActivityIndicator color={Colors.secondary} /> :
                     <>
@@ -292,13 +294,15 @@ const ProductScreen = ({ navigation, route }: any) => {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={styles.buyBtn}
-                                onPress={() => navigation.navigate('Checkout')}
+                                onPress={() => {
+                                    if(!product) return
+                                    dispatch(addToBag(product))
+                                    navigation.replace('CheckoutScreen')}}
                             >
                                 <Text style={styles.buyTxt}>Buy Now</Text>
                             </TouchableOpacity>
                         </View>
                     </>
-
             }
 
         </View>

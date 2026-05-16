@@ -1,15 +1,11 @@
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { fp, hp, wp } from '../../../helper/Responsive'
 import Images from '../../../assets/Images'
 import fonts from '../../../assets/fonts'
 import Colors from '../../../helper/Colors'
-import RestApi from '../../../Api/RestApi'
 import localStore from '../../../utils/AsynsStorage'
-import showToast from '../../../utils/showToast'
-import { UserProfileProps } from '../../../helper/interface'
-import { useAppDispatch, useAppSelector } from '../../../Redux/reducers/hooks'
-import { setuserData } from '../../../Redux/reducers/UserReducer'
+import {useAppSelector } from '../../../Redux/reducers/hooks'
 
 interface OptionProps {
   id: number;
@@ -82,6 +78,7 @@ const options: OptionProps[] = [
 
 const ProfileScreen = ({ navigation }: any) => {
   const user = useAppSelector((state) => state.user.userData)
+  const wishlist = useAppSelector((state) => state.product.wishList)
   console.log("user", user);
   
   const onPressHandler = async (value: string | undefined) => {
@@ -108,7 +105,7 @@ const ProfileScreen = ({ navigation }: any) => {
                 <Text style={styles.statLabel}>Orders</Text>
               </View>
               <View style={styles.statItem}>
-                <Text style={styles.statVal}>{10}</Text>
+                <Text style={styles.statVal}>{wishlist.length}</Text>
                 <Text style={styles.statLabel}>Wishlist</Text>
               </View>
               <View style={styles.statItem}>

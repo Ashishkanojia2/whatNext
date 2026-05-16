@@ -49,7 +49,6 @@ const EditProfileScreen = ({ navigation }: any) => {
                 method: 'PUT',
                 request: formData,
             });
-            console.log('update result💚', res);
             if (!res) return showToast({ message: res.message });
             if (res || res.status == 201) {
                 dispatch(setuserData(res?.result));

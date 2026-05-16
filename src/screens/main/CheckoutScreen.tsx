@@ -5,8 +5,9 @@ import Images from '../../assets/Images';
 import Colors from '../../helper/Colors';
 import fonts from '../../assets/fonts';
 import { fp } from '../../helper/Responsive';
+import CustomerHeader from '../../component/headeComponent/CustomerHeader';
 
-const CheckoutScreen = ({ navigation }: any) => {
+const CheckoutScreen = ({ navigation , route }: any) => {
   const bag = useAppSelector((s: any) => s.product.bag || []);
   const [selectedPayment, setSelectedPayment] = useState<'card' | 'paypal' | 'cod'>('card');
 
@@ -31,8 +32,7 @@ const CheckoutScreen = ({ navigation }: any) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Checkout</Text>
-
+      <CustomerHeader title='Checkout' backHandler={true} />
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
         <View style={styles.sectionCard}>
           <Text style={styles.sectionTitle}>Delivery Address</Text>
@@ -41,7 +41,7 @@ const CheckoutScreen = ({ navigation }: any) => {
               <Text style={styles.addressName}>John Doe</Text>
               <Text style={styles.addressText}>123, Example Street, City, Country - 123456</Text>
             </View>
-            <TouchableOpacity onPress={() => navigation.navigate('AddressEdit')}> 
+            <TouchableOpacity onPress={() => navigation.navigate('AddressEdit')}>
               <Text style={styles.editTxt}>Edit</Text>
             </TouchableOpacity>
           </View>
@@ -85,12 +85,12 @@ const CheckoutScreen = ({ navigation }: any) => {
         </View>
       </ScrollView>
 
-      <View style={styles.footer}> 
+      <View style={styles.footer}>
         <View>
           <Text style={{ fontFamily: fonts.Medium }}>Total</Text>
           <Text style={{ fontFamily: fonts.SemiBold, fontSize: fp(18) }}>₹{total.toFixed(2)}</Text>
         </View>
-        <TouchableOpacity style={styles.placeOrderBtn} onPress={() => {/* Place order flow */}} disabled={bag.length === 0}>
+        <TouchableOpacity style={styles.placeOrderBtn} onPress={() => navigation.navigate('OrderPlacedScreen')} disabled={bag.length === 0}>
           <Text style={styles.placeOrderTxt}>{bag.length === 0 ? 'No items' : 'Place Order'}</Text>
         </TouchableOpacity>
       </View>
@@ -102,7 +102,6 @@ export default CheckoutScreen;
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.primary2 },
-  header: { fontFamily: fonts.SemiBold, fontSize: fp(20), padding: 12, color: Colors.black },
   sectionCard: { backgroundColor: Colors.white, margin: 12, padding: 12, borderRadius: 10, elevation: 4 },
   sectionTitle: { fontFamily: fonts.Medium, marginBottom: 8 },
   addressRow: { flexDirection: 'row', alignItems: 'center' },
@@ -115,10 +114,10 @@ const styles = StyleSheet.create({
   itemDesc: { color: Colors.placeHolder, fontFamily: fonts.Regular, marginTop: 4, fontSize: fp(12) },
   itemPrice: { fontFamily: fonts.Medium, color: Colors.black },
   payRow: { flexDirection: 'row', justifyContent: 'space-between' },
-  payOption: { flex: 1, padding: 10, alignItems: 'center', borderRadius: 8, marginHorizontal: 6, backgroundColor: '#fafafa',},
+  payOption: { flex: 1, padding: 10, alignItems: 'center', borderRadius: 8, marginHorizontal: 6, backgroundColor: '#fafafa', },
   payOptionActive: { borderWidth: 1, borderColor: Colors.third, backgroundColor: '#fff' },
   payIcon: { width: 28, height: 18, marginBottom: 6 },
-  payTxt: { fontFamily: fonts.Medium, fontSize: fp(12) , textAlign:"center"},
+  payTxt: { fontFamily: fonts.Medium, fontSize: fp(12), textAlign: "center" },
   summaryRow: { flexDirection: 'row', justifyContent: 'space-between', marginVertical: 6 },
   summaryLabel: { color: Colors.placeHolder, fontFamily: fonts.Regular },
   summaryValue: { color: Colors.black, fontFamily: fonts.Medium },
