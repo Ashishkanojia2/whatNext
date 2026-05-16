@@ -8,7 +8,7 @@ import RestApi from '../../../Api/RestApi'
 import localStore from '../../../utils/AsynsStorage'
 import showToast from '../../../utils/showToast'
 import { UserProfileProps } from '../../../helper/interface'
-import { useAppDispatch } from '../../../Redux/reducers/hooks'
+import { useAppDispatch, useAppSelector } from '../../../Redux/reducers/hooks'
 import { setuserData } from '../../../Redux/reducers/UserReducer'
 
 interface OptionProps {
@@ -81,26 +81,9 @@ const options: OptionProps[] = [
 ]
 
 const ProfileScreen = ({ navigation }: any) => {
-  const dispatch = useAppDispatch()
-  const [user, setUser] = useState<UserProfileProps | null>(null)
-  useEffect(() => {
-    getUserProfile()
-  }, [])
-
-  const getUserProfile = async () => {
-    try {
-      const res = await RestApi({
-        method: "GET",
-        endpoint: "user/profile",
-      })
-      console.log("response", res)
-      if (!res || res.status !== 200) return showToast({ message: "user not found" })
-      setUser(res?.result)
-      dispatch(setuserData(res?.result))
-    } catch (error) {
-      console.log("Catch Error to get user profile data", error)
-    }
-  }
+  const user = useAppSelector((state) => state.user.userData)
+  console.log("user", user);
+  
   const onPressHandler = async (value: string | undefined) => {
     if (value == "Logout") {
       const result = await localStore({ method: "remove", key: "token" })

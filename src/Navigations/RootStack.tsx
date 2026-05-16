@@ -6,6 +6,7 @@ import MainStack from './MainStack/MainStack';
 import localStore from '../utils/AsynsStorage';
 import Colors from '../helper/Colors';
 import AuthStack from './AuthStack/AuthStack';
+import { navigationRef } from '../helper/NavigationHelper';
 const Stack = createNativeStackNavigator();
 
 const index = () => {
@@ -33,7 +34,7 @@ const index = () => {
     );
   }
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         initialRouteName={isloggedIn ? 'MainStack' : 'AuthStack'}
         screenOptions={{ headerShown: false }}

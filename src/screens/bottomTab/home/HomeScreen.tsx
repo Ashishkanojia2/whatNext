@@ -10,14 +10,18 @@ import { ProductProps } from '../../../helper/interface';
 import ProductComponent from '../../../component/ProductComponent';
 import usePullDownToRefresh from "../../../utils/usePullDownToRefresh"
 import showToast from '../../../utils/showToast';
+import { useAppDispatch } from '../../../Redux/reducers/hooks';
+import { setuserData } from '../../../Redux/reducers/UserReducer';
 const { height, width } = Dimensions.get('window');
 
 const HomeScreen = ({ navigation }: any) => {
+  const dispatch = useAppDispatch()
   const [product, setProduct] = useState<ProductProps[]>([]);
   const { refresh, refreshPageHandler } = usePullDownToRefresh()
 
   useEffect(() => {
     getAllProduct()
+    getUserProfile()
   }, [])
 
   const getAllProduct = async () => {
@@ -27,10 +31,25 @@ const HomeScreen = ({ navigation }: any) => {
         setProduct(res.result);
       }
     } catch (error) {
-      showToast({message :"Internal server error", type:"error"})
+      showToast({ message: "Internal server error", type: "error" })
       console.log('homeSceen error: ', error);
     }
   };
+
+  const getUserProfile = async () => {
+    try {
+      const res = await RestApi({ method: "GET", endpoint: "user/profile" })
+      console.log("response", res)
+      if (!res || res.status !== 200) return showToast({ message: "user not found" })
+      dispatch(setuserData(res?.result))
+    } catch (error) {
+      console.log("Catch Error to get user profile data", error)
+    }
+  }
+
+
+
+
 
   return (
     <ProductComponent product={product}
