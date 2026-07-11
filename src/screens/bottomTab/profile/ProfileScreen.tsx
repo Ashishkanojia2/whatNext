@@ -95,23 +95,12 @@ const ProfileScreen = ({ navigation }: any) => {
     <View style={styles.rootContainer}>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 12 }}>
         <View style={styles.headerCard}>
-          <Image source={{ uri: user?.avatar?.url }} style={styles.avatar} resizeMode='contain' />
+          <Image source={{ uri: user?.avatar?.url }} style={styles.avatar} resizeMode='cover' />
           <View style={{ marginLeft: 12, flex: 1 }}>
             <Text style={styles.name}>{user?.name}</Text>
             <Text style={styles.email}>{user?.email}</Text>
             <View style={styles.statsRow}>
-              <View style={styles.statItem}>
-                <Text style={styles.statVal}>{0}</Text>
-                <Text style={styles.statLabel}>Orders</Text>
-              </View>
-              <View style={styles.statItem}>
-                <Text style={styles.statVal}>{wishlist.length}</Text>
-                <Text style={styles.statLabel}>Wishlist</Text>
-              </View>
-              <View style={styles.statItem}>
-                <Text style={styles.statVal}>{12}</Text>
-                <Text style={styles.statLabel}>Vouchers</Text>
-              </View>
+              
             </View>
           </View>
           <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate('EditProfileScreen')}>
@@ -155,8 +144,9 @@ const styles = StyleSheet.create({
     width: 78,
     height: 78,
     borderRadius: 40,
+
   },
-  name: { fontFamily: fonts.SemiBold, fontSize: fp(18), color: Colors.black },
+  name: { fontFamily: fonts.SemiBold, fontSize: fp(23), color: Colors.black },
   email: { fontFamily: fonts.Regular, color: Colors.placeHolder, marginTop: 4 },
   statsRow: { flexDirection: 'row', marginTop: 8 },
   statItem: { marginRight: 18, alignItems: 'center' },

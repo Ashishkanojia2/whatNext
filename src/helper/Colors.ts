@@ -7,7 +7,8 @@ const Colors = {
     third:"#d92f23",
     placeHolder:"#9B9B9B",
     ratingStart:"#ff6200",
-    backDrop:"#0000004e"
+    backDrop:"#00000097",
+    gray:"#666666ff"
 
 }
 export default Colors

@@ -48,9 +48,6 @@ const HomeScreen = ({ navigation }: any) => {
   }
 
 
-
-
-
   return (
     <ProductComponent product={product}
       refreshControl={
@@ -96,7 +93,6 @@ const HomeScreen = ({ navigation }: any) => {
               <Text style={styles.viewProduct}>View all</Text>
             </TouchableOpacity>
           </View>
-
         </>
       } />
   );

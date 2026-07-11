@@ -10,10 +10,12 @@ import CustomeButton from '../../component/CustomeButton';
 import showToast from '../../utils/showToast';
 import RestApi from '../../Api/RestApi';
 import localStore from '../../utils/AsynsStorage';
+import LoaderModal from '../../component/modal/LoaderModal';
 
 const LoginScreen = ({ navigation }: any) => {
-  const [mail, setMail] = useState<string>('testuser@gmail.com');
+  const [mail, setMail] = useState<string>('ashish@gmail.com');
   const [password, setPassword] = useState<string>('Hello@123');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   // const [mail, setMail] = useState<string>('ashish@gmail.com');
   // const [password, setPassword] = useState<string>('Hello@123');
   const LoginHandler = async () => {
@@ -27,13 +29,15 @@ const LoginScreen = ({ navigation }: any) => {
         return showToast({ message: 'Please enter email', type: 'error' });
       if (!password)
         return showToast({ message: 'Please enter password', type: 'error' });
+      if(isLoading) return
+      setIsLoading(true)
       const response = await RestApi({
         method: 'POST',
         endpoint: 'login',
         request,
       });
       console.log('Login Response', response);
-      if (response.success) {
+      if (response?.success) {
         showToast({ message: response.message, type: 'success' });
         await localStore({
           method: 'set',
@@ -49,6 +53,8 @@ const LoginScreen = ({ navigation }: any) => {
       }
     } catch (error) {
       console.log('Login Catch error', error);
+    }finally{
+      setIsLoading(false)
     }
   };
   return (
@@ -94,6 +100,10 @@ const LoginScreen = ({ navigation }: any) => {
           <SocailIcon image={Images.faceBook} onPress={() => { }} />
         </View>
       </View>
+      {
+        isLoading &&
+        <LoaderModal onVisible={isLoading} />
+      }
     </View>
   );
 };

@@ -1,3 +1,5 @@
+import { ImageProps } from "react-native";
+
 //Home-screen
 export interface Review {
   user: string;
@@ -51,4 +53,31 @@ export type UserProfileProps = {
   pinCode?: string,
   query?: [string],
   review?: [string],
+}
+
+
+export type ImgProps = {
+  public_id: string
+  url: string
+}
+
+export type ProductDetailsProps = {
+  companyName: string,
+  price: number,
+  imageUrl: ImgProps,
+  productName: string,
+  description: string,
+  rating: number,
+  _id: string
+}
+
+
+export type OrderListProps = {
+  _id: string,
+  createdAt: Date,
+  deliveredAt: Date,
+  paymentId: string,
+  sellerId: string,
+  userid: string,
+  productId: ProductDetailsProps[]
 }

@@ -1,34 +1,79 @@
 import React, { useMemo, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, ScrollView } from 'react-native';
-import { useAppSelector } from '../../Redux/reducers/hooks';
+import { useAppDispatch, useAppSelector } from '../../Redux/reducers/hooks';
 import Images from '../../assets/Images';
 import Colors from '../../helper/Colors';
 import fonts from '../../assets/fonts';
 import { fp } from '../../helper/Responsive';
 import CustomerHeader from '../../component/headeComponent/CustomerHeader';
+import RestApi from '../../Api/RestApi';
+import { clearBag } from '../../Redux/reducers/ProductReducer';
+import LoaderModal from '../../component/modal/LoaderModal';
+import OrderItem from '../../component/orderItem/OrderItem';
 
-const CheckoutScreen = ({ navigation , route }: any) => {
+const CheckoutScreen = ({ navigation, route }: any) => {
+  const dispatch = useAppDispatch()
   const bag = useAppSelector((s: any) => s.product.bag || []);
+
   const [selectedPayment, setSelectedPayment] = useState<'card' | 'paypal' | 'cod'>('card');
 
   const subtotal = useMemo(() => bag.reduce((s: number, i: any) => s + (Number(i.price || 0) * (i.qty || 1)), 0), [bag]);
-  const shipping = subtotal > 100 ? 0 : 8.99;
+  const shipping = subtotal > 100 ? 0 : 6.99;
   const discount = 0; // coupon flow can set this
   const total = Math.max(0, subtotal + shipping - discount);
+  const [loadingModal, setLoadingModal] = useState(false)
 
-  const renderItem = ({ item }: any) => (
-    <View style={styles.itemRow}>
-      <Image source={item?.imageUrl ? { uri: item.imageUrl.url } : Images.productGirl} style={styles.itemImage} resizeMode="contain" />
-      <View style={{ flex: 1, marginLeft: 12 }}>
-        <Text style={styles.itemTitle} numberOfLines={1}>{item?.productName || item?.title}</Text>
-        <Text style={styles.itemDesc} numberOfLines={2}>{(item as any)?.description || ''}</Text>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 }}>
-          <Text style={styles.itemPrice}>₹{Number(item.price || 0).toFixed(2)}</Text>
-          <Text style={styles.itemPrice}>x {item.qty || 1}</Text>
-        </View>
-      </View>
-    </View>
-  );
+  const orderPlacedHandler = async () => {
+    console.log("bag", bag)
+    if (loadingModal) return;
+    setLoadingModal(true)
+    try {
+      const sellerId: string[] = []
+      const productId: string[] = []
+      const paymentId: string = '6a343c102919e9e32520ec76'
+
+      bag.forEach((item: any) => {
+        sellerId.push(item.sellerId)
+        productId.push(item._id)
+      })
+      console.table("sellerId", sellerId, "productId", productId)
+      const data = {
+        sellerId,
+        productId,
+        paymentId
+      }
+
+      const response = await RestApi({
+        method: "POST",
+        endpoint: "order/placeOrder",
+        request: data
+      })
+      if (!response?.success) {
+        return;
+      }
+      dispatch(clearBag())
+      navigation.navigate('OrderPlacedScreen')
+
+    } catch (error) {
+      console.log("Order Place Error", error)
+    } finally {
+      setLoadingModal(false)
+    }
+  }
+
+  // const renderItem = ({ item }: any) => (
+  //   <View style={styles.itemRow}>
+  //     <Image source={item?.imageUrl ? { uri: item.imageUrl.url } : Images.productGirl} style={styles.itemImage} resizeMode="contain" />
+  //     <View style={{ flex: 1, marginLeft: 12 }}>
+  //       <Text style={styles.itemTitle} numberOfLines={1}>{item?.productName || item?.title}</Text>
+  //       <Text style={styles.itemDesc} numberOfLines={2}>{(item as any)?.description || ''}</Text>
+  //       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 }}>
+  //         <Text style={styles.itemPrice}>₹{Number(item.price || 0).toFixed(2)}</Text>
+  //         <Text style={styles.itemPrice}>x {item.qty || 1}</Text>
+  //       </View>
+  //     </View>
+  //   </View>
+  // );
 
   return (
     <View style={styles.container}>
@@ -52,7 +97,7 @@ const CheckoutScreen = ({ navigation , route }: any) => {
           <FlatList
             data={bag}
             keyExtractor={(it, i) => (it._id ?? it.id ?? i).toString()}
-            renderItem={renderItem}
+            renderItem={({ item }) => <OrderItem item={item} />}
             scrollEnabled={false}
             ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
           />
@@ -90,10 +135,15 @@ const CheckoutScreen = ({ navigation , route }: any) => {
           <Text style={{ fontFamily: fonts.Medium }}>Total</Text>
           <Text style={{ fontFamily: fonts.SemiBold, fontSize: fp(18) }}>₹{total.toFixed(2)}</Text>
         </View>
-        <TouchableOpacity style={styles.placeOrderBtn} onPress={() => navigation.navigate('OrderPlacedScreen')} disabled={bag.length === 0}>
+        <TouchableOpacity style={styles.placeOrderBtn} onPress={orderPlacedHandler} disabled={bag.length === 0}>
           <Text style={styles.placeOrderTxt}>{bag.length === 0 ? 'No items' : 'Place Order'}</Text>
         </TouchableOpacity>
       </View>
+
+      {
+        loadingModal &&
+        <LoaderModal onVisible={loadingModal} onHide={() => setLoadingModal(false)} />
+      }
     </View>
   );
 };
@@ -108,11 +158,11 @@ const styles = StyleSheet.create({
   addressName: { fontFamily: fonts.SemiBold },
   addressText: { color: Colors.placeHolder, marginTop: 6, fontFamily: fonts.Regular },
   editTxt: { color: Colors.third, fontFamily: fonts.Medium },
-  itemRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 8 },
-  itemImage: { width: 70, height: 70, borderRadius: 8 },
-  itemTitle: { fontFamily: fonts.Medium },
-  itemDesc: { color: Colors.placeHolder, fontFamily: fonts.Regular, marginTop: 4, fontSize: fp(12) },
-  itemPrice: { fontFamily: fonts.Medium, color: Colors.black },
+  // itemRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 8 },
+  // itemImage: { width: 70, height: 70, borderRadius: 8 },
+  // itemTitle: { fontFamily: fonts.Medium },
+  // itemDesc: { color: Colors.placeHolder, fontFamily: fonts.Regular, marginTop: 4, fontSize: fp(12) },
+  // itemPrice: { fontFamily: fonts.Medium, color: Colors.black },
   payRow: { flexDirection: 'row', justifyContent: 'space-between' },
   payOption: { flex: 1, padding: 10, alignItems: 'center', borderRadius: 8, marginHorizontal: 6, backgroundColor: '#fafafa', },
   payOptionActive: { borderWidth: 1, borderColor: Colors.third, backgroundColor: '#fff' },

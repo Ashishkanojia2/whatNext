@@ -38,7 +38,7 @@ const ProductCard = ({
       >
         <ImageBackground
           source={item?.imageUrl ? { uri: item?.imageUrl?.url } : require('.././assets/Images/productGirl.png')}
-          style={{ flex:1, borderRadius: 10 }}
+          style={{ flex: 1, borderRadius: 10 }}
           resizeMode='contain'
         >
           {true && (
@@ -78,7 +78,7 @@ const ProductCard = ({
           <Image
             key={i}
             source={Images.ratingStar}
-            style={{ height: hp(15), width: wp(15) }}
+            style={{ height: hp(15), width: wp(15), gap: 5 }}
             tintColor={Colors.ratingStart}
             resizeMode="center"
           />
@@ -87,7 +87,7 @@ const ProductCard = ({
 
       </View>
       <Text style={styles.amt}>₹{item?.price}</Text>
-      <CustomeButton lable={"Add to bag"} buttonStyle={styles.addtoCartBtn} lableStyle={{fontSize:fp(14)}}/>
+      <CustomeButton lable={"Add to bag"} buttonStyle={styles.addtoCartBtn} lableStyle={{ fontSize: fp(14) }} />
     </TouchableOpacity>
   );
 };
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: -15,
     zIndex: 10,
-    elevation:10
+    elevation: 10
   },
   discountTag: {
     backgroundColor: Colors.third,
@@ -158,6 +158,6 @@ const styles = StyleSheet.create({
     height: hp(30),
     width: "80%",
     alignSelf: "center",
-    marginTop:5
+    marginTop: 5
   }
 });

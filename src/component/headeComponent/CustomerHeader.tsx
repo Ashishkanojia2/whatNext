@@ -36,7 +36,9 @@ const CustomerHeader: React.FC<CustomerHeaderProps> = ({
                 <View>{leftItem}</View>
             }
             <Text style={styles.title}>{title}</Text>
-            <View>{rightItem}</View>
+            {
+                rightItem ? <View>{rightItem}</View> : <View style={{ width: 25 }} />
+            }
         </View>
     )
 }

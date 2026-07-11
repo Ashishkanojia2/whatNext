@@ -20,6 +20,7 @@ const section = ['Mens', 'Womens', 'Child'];
 const ShopScreen = ({ navigation }: any) => {
   const [sectionNo, setSectionNo] = useState(0);
   const [products, setProducts] = useState([]);
+  const [loading , setLoading] = useState(false)
 
   useEffect(() => {
     const categories = sectionNo == 0 ? 'men' : sectionNo == 1 ? 'women' : 'child';
@@ -29,16 +30,20 @@ const ShopScreen = ({ navigation }: any) => {
 
 
   const getProductsHandler = async (category: string) => {
+    if(loading) return
+    setLoading(true)
     try {
       const res = await RestApi({
         method: 'GET',
         endpoint: `product/allProducts?category=${category}`,
       });
       console.log("categories res", res.result);
-      setProducts(res.result);
+      setProducts(res?.result);
       // return res.result;
     } catch (error) {
       console.log("categories catch error", error);
+    }finally{
+      setLoading(false)
     }
   }
 
@@ -51,7 +56,6 @@ const ShopScreen = ({ navigation }: any) => {
         showRightIcon
         rightIcon={Images.search}
         rightIconPress={() => navigation.navigate('SearchScreen')}
-
       />
       <View
         style={{

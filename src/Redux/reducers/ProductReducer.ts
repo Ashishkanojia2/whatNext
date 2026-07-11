@@ -59,5 +59,6 @@ export const {
   addToBag,
   decreaseQty,
   removeFromBag,
+  clearBag,
 } = productSlice.actions;
 export default productSlice.reducer;

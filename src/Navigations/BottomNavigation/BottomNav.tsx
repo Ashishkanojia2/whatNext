@@ -14,7 +14,7 @@ const Tab = createBottomTabNavigator();
 const BottomNav = () => {
   return (
     <Tab.Navigator
-      screenOptions={{ headerShown: false, tabBarStyle: { height: 90 }}}
+      screenOptions={{ headerShown: false, tabBarStyle: { height: 55 }}}
       initialRouteName="HomeScreen"
     >
       <Tab.Screen

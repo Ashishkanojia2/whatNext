@@ -27,7 +27,7 @@ const MyProfileScreen = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
       <View style={styles.topCard}>
-       <Image source={{ uri: user?.avatar?.url }} style={styles.avatar} resizeMode='contain' />
+       <Image source={{ uri: user?.avatar?.url }} style={styles.avatar} resizeMode='cover' />
         <View style={{ marginLeft: 12, flex: 1 }}>
           <Text style={styles.name}>{userData?.name}</Text>
           <Text style={styles.email}>{userData?.email}</Text>
@@ -36,7 +36,7 @@ const MyProfileScreen = ({ navigation }: any) => {
         <TouchableOpacity style={styles.editSmall} onPress={() => navigation.navigate('EditProfileScreen')}>
           <Text style={styles.editSmallTxt}>Edit</Text>
         </TouchableOpacity>
-      </View>
+      </View> 
 
       <View style={{ marginTop: 16 }}>
         <ProfileField label="Address" value={userData?.address} />
